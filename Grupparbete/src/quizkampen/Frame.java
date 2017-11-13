@@ -19,7 +19,7 @@ public class Frame extends JFrame implements ActionListener {
 	JButton newGame = new JButton("Starta ett nytt spel");
 	
 	public Frame() {
-		//frame layout etc
+		//frame layout
 		setLayout(new BorderLayout());
 		add("North", userInfo);
 		
