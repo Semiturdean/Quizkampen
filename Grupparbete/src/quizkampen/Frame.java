@@ -19,7 +19,7 @@ public class Frame extends JFrame implements ActionListener {
 	JButton newGame = new JButton("Starta ett nytt spel");
 	
 	public Frame() {
-		//frame layout
+		//frame layout, storlek, dfco etc
 		setLayout(new BorderLayout());
 		add("North", userInfo);
 		
@@ -28,8 +28,8 @@ public class Frame extends JFrame implements ActionListener {
 		userInfo.add(userName);
 		userInfo.add(newGame); newGame.addActionListener(this);
 		
-		setSize(400,400);
-		setLocation(800,600);
+		setSize(800,800);
+		setLocation(800,200);
 		setVisible(true);
 		setDefaultCloseOperation(3);
 		
