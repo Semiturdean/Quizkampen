@@ -16,12 +16,14 @@ public class Frame extends JFrame implements ActionListener {
 	JPanel userInfo = new JPanel();
 	JPanel questionPanel = new JPanel();
 	JLabel userLabel = new JLabel("Användare:");
-	JLabel userName = new JLabel("");
 	JButton newGame = new JButton("Starta ett nytt spel");
-	String s = JOptionPane.showInputDialog("Ange användarnamn");
-	Player user = new Player(s);
+	Player user = new Player();
 	
 	public Frame() {
+		// Skapa spelaren
+		user.setUsername(JOptionPane.showInputDialog("Ange användarnamn!"));
+		JLabel userName = new JLabel(user.getUsername());
+		
 		//frame layout, storlek, dfco etc
 		setLayout(new BorderLayout());
 		add("North", userInfo);

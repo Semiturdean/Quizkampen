@@ -6,9 +6,8 @@ public class Player
 	private String password;
 	private String membershipType;
 	//
-	public Player(String username)
+	public Player()
 	{
-		this.username = username;
 		membershipType = "basic";
 	}
 
