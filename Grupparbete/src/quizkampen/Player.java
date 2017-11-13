@@ -5,10 +5,9 @@ public class Player
 	private String username;
 	private String password;
 	private String membershipType;
-	//
-	public Player(String username)
+	// ändrat konstruktorn till tom
+	public Player()
 	{
-		this.username = username;
 		membershipType = "basic";
 	}
 
