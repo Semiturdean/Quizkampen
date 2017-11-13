@@ -1,5 +1,5 @@
 package quizkampen;
 
 public class Frame {
-// hej då igen
+// hej då igen ok!
 }
