@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Frame extends JFrame implements ActionListener {
@@ -15,8 +16,10 @@ public class Frame extends JFrame implements ActionListener {
 	JPanel userInfo = new JPanel();
 	JPanel questionPanel = new JPanel();
 	JLabel userLabel = new JLabel("Användare:");
-	JLabel userName = new JLabel("Semi");
+	JLabel userName = new JLabel("");
 	JButton newGame = new JButton("Starta ett nytt spel");
+	String s = JOptionPane.showInputDialog("Ange användarnamn");
+	Player user = new Player(s);
 	
 	public Frame() {
 		//frame layout, storlek, dfco etc
