@@ -20,7 +20,7 @@ public class Frame extends JFrame implements ActionListener {
 	Player user = new Player();
 	
 	public Frame() {
-		// Skapa spelaren
+		// Skapa spelaren namnet
 		user.setUsername(JOptionPane.showInputDialog("Ange användarnamn!"));
 		JLabel userName = new JLabel(user.getUsername());
 		
