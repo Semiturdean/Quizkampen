@@ -6,15 +6,10 @@ import java.net.Socket;
 public class GameRoom implements Runnable {
     private Socket clientSocket;
     private String clientName;
-    private Session session;
-    private Protocol protocol;
 
     GameRoom(Socket clientSocket) {
         this.clientSocket = clientSocket;
         clientName = clientSocket.getInetAddress().getHostName();
-        protocol = new Protocol();
-        session = new Session();
-        session.setAnswer(protocol.getAnswers()[0]);
     }
 
     @Override
@@ -28,13 +23,14 @@ public class GameRoom implements Runnable {
         ) {
             System.out.println("Established connection with client: " + clientName);
 
-            outputStream.writeObject("Var vänlig skriv något");
+            // Initialization with client
+            Protocol protocol = new Protocol();
+            Session input;
+            Session output = protocol.getInitialSession();
+            outputStream.writeObject(output);
 
-            Object inputStreamObject, outputStreamObject;
-
-            while ((inputStreamObject = inputStream.readObject()) != null) {
-                Session output = protocol.processInput((Session) inputStreamObject);
-                //outputStreamObject = "Client " + clientName + ": " + inputStreamObject;
+            while ((input = (Session)inputStream.readObject()) != null) {
+                output = protocol.processInput(input);
                 outputStream.writeObject(output);
             }
         } catch (IOException e) {

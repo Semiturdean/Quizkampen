@@ -10,6 +10,7 @@ public class Protocol {
     private int state = WAITING;
     private int currentQuestion = 0;
     private int currentRound = 0;
+    private int totalRounds;
 
     private String[] questions = {"ETT", "TVÅ", "TRE"};
     private String[] answers = {"1", "2", "3"};
@@ -22,14 +23,17 @@ public class Protocol {
         return answers;
     }
 
-    public Session processInput(Session userInput) {
-        Session output = null;
+    Protocol() {
+        totalRounds = questions.length;
+    }
 
-        if (userInput.getState() == WAITING || userInput.getState() == SERVERSENTANSWER) {
+    public Session processInput(Session userInput) {
+        if (userInput.getState() == WAITING) {
+            // Will run after first initialization and next question
             userInput.setQuestion(questions[currentQuestion]);
             userInput.setState(SERVERSENTQUESTION);
         } else if (userInput.getState() == CLIENTSENTANSWER) {
-            currentQuestion++;
+            // Runs after the client has answered
             if (userInput.getAnswer().equalsIgnoreCase(answers[currentQuestion])) {
                 userInput.setVerdict(true);
                 userInput.setState(SERVERSENTANSWER);
@@ -37,7 +41,14 @@ public class Protocol {
                 userInput.setVerdict(false);
                 userInput.setState(SERVERSENTANSWER);
             }
+            currentQuestion++;
         }
-        return output;
+        return userInput;
+    }
+
+    public Session getInitialSession() {
+        Session session = new Session();
+        session.setQuestion(questions[0]);
+        return session;
     }
 }

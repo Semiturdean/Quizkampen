@@ -32,7 +32,7 @@ public class Session implements Serializable {
         this.answer = answer;
     }
 
-    public boolean isVerdict() {
+    public boolean getVerdict() {
         return verdict;
     }
 
@@ -41,6 +41,12 @@ public class Session implements Serializable {
     }
 
     Session() {
+        state = 0;
+        verdict = false;
+    }
+
+    Session(String question) {
+        this.question = question;
         state = 0;
         verdict = false;
     }

@@ -21,26 +21,26 @@ public class Client extends Thread {
                 ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream())
         ) {
             System.out.println("Established connection to the server");
-
-            Object inputStreamObject, outputStreamObject;
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             Session clientChoice;
-            while ((inputStreamObject = inputStream.readObject()) != null) {
-                clientChoice = (Session) inputStreamObject;
-                if (clientChoice.getState() == 0) {
-                    clientChoice.setAnswer(userInput.readLine());
+            while ((clientChoice = (Session)inputStream.readObject()) != null) {
+                if (clientChoice.getState() == 1) {
+                    System.out.println("Server: " + clientChoice.getQuestion());
+                    clientChoice.setAnswer(userInput.readLine().trim()); // Client answers question here
                     clientChoice.setState(2);
                 } else if (clientChoice.getState() == 3) {
+                    // Answer result goes here
+                    if (clientChoice.getVerdict()) {
+                        System.out.println("Du svarade rätt!");
+                    } else {
+                        System.out.println("Du svarade fel!");
+                    }
                     // Update GUI button colors depending on answer
-                }
 
-
-                // User can type something in the console and send it to the server
-                // Only in testing phase
-                if ((outputStreamObject = userInput.readLine()) != null) {
-                    outputStream.writeObject(outputStreamObject);
+                    clientChoice.setState(0);
                 }
+                outputStream.writeObject(clientChoice);
             }
         } catch (IOException e) {
             e.printStackTrace();
