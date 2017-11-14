@@ -2,7 +2,7 @@ package quizkampen;
 
 public class Question 
 {
-	//Skapar en frÂga med r‰tt svar och 3 fel svar
+	//Skapar en fr√•ga med r√§tt svar och 3 fel svar
 	private String question;
 	private String rightChoice;
 	private String wrongChoice1;

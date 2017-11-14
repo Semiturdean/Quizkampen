@@ -15,13 +15,13 @@ public class Frame extends JFrame implements ActionListener {
 
 	JPanel userInfo = new JPanel();
 	JPanel questionPanel = new JPanel();
-	JLabel userLabel = new JLabel("Anv‰ndare:");
+	JLabel userLabel = new JLabel("Anv√§ndare:");
 	JButton newGame = new JButton("Starta ett nytt spel");
 	Player user = new Player();
 	
 	public Frame() {
 		// Skapa spelaren namnet
-		user.setUsername(JOptionPane.showInputDialog("Ange anv‰ndarnamn!"));
+		user.setUsername(JOptionPane.showInputDialog("Ange anv√§ndarnamn!"));
 		JLabel userName = new JLabel(user.getUsername());
 		
 		//frame layout, storlek, dfco etc
@@ -35,14 +35,15 @@ public class Frame extends JFrame implements ActionListener {
 		
 		setSize(800,800);
 		setLocation(800,200);
+		setLocationRelativeTo(null);
 		setVisible(true);
-		setDefaultCloseOperation(3);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == newGame) {
-			System.out.println("Alternativ fˆr start av spel");
+			System.out.println("Alternativ f√∂r start av spel");
 		}
 		
 	}
