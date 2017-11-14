@@ -6,10 +6,15 @@ import java.net.Socket;
 public class GameRoom implements Runnable {
     private Socket clientSocket;
     private String clientName;
+    private Session session;
+    private Protocol protocol;
 
     GameRoom(Socket clientSocket) {
         this.clientSocket = clientSocket;
         clientName = clientSocket.getInetAddress().getHostName();
+        protocol = new Protocol();
+        session = new Session();
+        session.setAnswer(protocol.getAnswers()[0]);
     }
 
     @Override
@@ -25,11 +30,12 @@ public class GameRoom implements Runnable {
 
             outputStream.writeObject("Var vänlig skriv något");
 
-            Object intputStreamObject, outputStreamObject;
+            Object inputStreamObject, outputStreamObject;
 
-            while ((intputStreamObject = inputStream.readObject()) != null) {
-                outputStreamObject = "Client " + clientName + ": " + intputStreamObject;
-                outputStream.writeObject(outputStreamObject);
+            while ((inputStreamObject = inputStream.readObject()) != null) {
+                Session output = protocol.processInput((Session) inputStreamObject);
+                //outputStreamObject = "Client " + clientName + ": " + inputStreamObject;
+                outputStream.writeObject(output);
             }
         } catch (IOException e) {
             System.out.println("A client unexpectedly disconnected: " + clientName);

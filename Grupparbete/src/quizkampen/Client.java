@@ -24,8 +24,17 @@ public class Client extends Thread {
 
             Object inputStreamObject, outputStreamObject;
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+
+            Session clientChoice;
             while ((inputStreamObject = inputStream.readObject()) != null) {
-                System.out.println(inputStreamObject.toString());
+                clientChoice = (Session) inputStreamObject;
+                if (clientChoice.getState() == 0) {
+                    clientChoice.setAnswer(userInput.readLine());
+                    clientChoice.setState(2);
+                } else if (clientChoice.getState() == 3) {
+                    // Update GUI button colors depending on answer
+                }
+
 
                 // User can type something in the console and send it to the server
                 // Only in testing phase
