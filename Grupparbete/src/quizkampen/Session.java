@@ -3,16 +3,16 @@ package quizkampen;
 import java.io.Serializable;
 
 public class Session implements Serializable {
-    private int state;
+    private ProtocolState state;
     private String question;
     private String answer;
     private boolean verdict;
 
-    public int getState() {
+    public ProtocolState getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(ProtocolState state) {
         this.state = state;
     }
 
@@ -41,13 +41,13 @@ public class Session implements Serializable {
     }
 
     Session() {
-        state = 0;
+        state = ProtocolState.WAITING;
         verdict = false;
     }
 
     Session(String question) {
         this.question = question;
-        state = 0;
+        state = ProtocolState.WAITING;
         verdict = false;
     }
 }

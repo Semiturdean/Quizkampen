@@ -25,11 +25,11 @@ public class Client extends Thread {
 
             Session clientChoice;
             while ((clientChoice = (Session)inputStream.readObject()) != null) {
-                if (clientChoice.getState() == 1) {
+                if (clientChoice.getState() == ProtocolState.SERVERSENTQUESTION) {
                     System.out.println("Server: " + clientChoice.getQuestion());
                     clientChoice.setAnswer(userInput.readLine().trim()); // Client answers question here
-                    clientChoice.setState(2);
-                } else if (clientChoice.getState() == 3) {
+                    clientChoice.setState(ProtocolState.CLIENTSENTANSWER);
+                } else if (clientChoice.getState() == ProtocolState.SERVERSENTANSWER) {
                     // Answer result goes here
                     if (clientChoice.getVerdict()) {
                         System.out.println("Du svarade rätt!");
@@ -38,7 +38,7 @@ public class Client extends Thread {
                     }
                     // Update GUI button colors depending on answer
 
-                    clientChoice.setState(0);
+                    clientChoice.setState(ProtocolState.WAITING);
                 }
                 outputStream.writeObject(clientChoice);
             }
