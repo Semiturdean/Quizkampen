@@ -23,13 +23,15 @@ public class GameRoom implements Runnable {
         ) {
             System.out.println("Established connection with client: " + clientName);
 
-            outputStream.writeObject("Var vänlig skriv något");
+            // Initialization with client
+            Protocol protocol = new Protocol();
+            Session input;
+            Session output = protocol.getInitialSession();
+            outputStream.writeObject(output);
 
-            Object intputStreamObject, outputStreamObject;
-
-            while ((intputStreamObject = inputStream.readObject()) != null) {
-                outputStreamObject = "Client " + clientName + ": " + intputStreamObject;
-                outputStream.writeObject(outputStreamObject);
+            while ((input = (Session)inputStream.readObject()) != null) {
+                output = protocol.processInput(input);
+                outputStream.writeObject(output);
             }
         } catch (IOException e) {
             System.out.println("A client unexpectedly disconnected: " + clientName);

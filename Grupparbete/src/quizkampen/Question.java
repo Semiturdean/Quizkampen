@@ -1,8 +1,12 @@
 package quizkampen;
 
-public class Question 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class Question
 {
-	//Skapar en fr�ga med r�tt svar och 3 fel svar
+	//Skapar en fråga med rätt svar och 3 fel svar
 	private String question;
 	private String rightChoice;
 	private String wrongChoice1;
@@ -38,6 +42,37 @@ public class Question
 	public String getWrongChoice3() {
 		return wrongChoice3;
 	}
-	
 
+    //0 = Fråga, 1 = ifall frågan har ställts, 2 & 3 = rätt svar, 4-6 = fel svar
+    String[][] stupidQuestion = new String[][]{
+            {"Hur många llllllll?", "0", "l", "l", "3", "4", "5"},
+            {"Hur många aaaaaaaaaa ?", "0", "a", "a", "3", "4", "5"},
+            {"Hur många hhhhhhhhhh", "0", "h", "h", "3", "4", "5"},
+            {"Hur många ttttttttt", "0", "t", "t", "3", "4", "5"},
+            {"Hur många bbbbbbbbbbb", "0", "b", "b", "3", "4", "5"}
+    };
+
+	public void mix(String[][] stupidQuestion) {
+		Random rnd = new Random();
+		int rad = rnd.nextInt(stupidQuestion.length) + 0;
+		ArrayList<String> tempList = new ArrayList<>();
+
+		//Loopar igenom för att lägga till de 4 svarsalternativ i en arraylist.
+        for (int i = 3; i < stupidQuestion[rad].length; i++) {
+            stupidQuestion[rad][1] = "used";
+            tempList.add(stupidQuestion[rad][i]);
+        }
+
+		//Slumpar innehållet i arrayListen
+		Collections.shuffle(tempList);
+
+		//Skriver in de slumpade värdena på deras tidigare platser.
+        int y = 0;
+        for (int i = 3; i < stupidQuestion[rad].length; i++) {
+
+            stupidQuestion[rad][i] = tempList.get(y);
+            y++;
+            System.out.println(stupidQuestion[rad][i]);
+        }
+    }
 }
