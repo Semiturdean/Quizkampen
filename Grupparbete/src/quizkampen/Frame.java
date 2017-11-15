@@ -31,7 +31,8 @@ public class Frame extends JFrame implements ActionListener {
 		userInfo.setLayout(new FlowLayout());
 		userInfo.add(userLabel);
 		userInfo.add(userName);
-		userInfo.add(newGame); newGame.addActionListener(this);
+		userInfo.add(newGame);
+		newGame.addActionListener(this);
 		
 		setSize(800,800);
 		setLocation(800,200);
@@ -45,7 +46,6 @@ public class Frame extends JFrame implements ActionListener {
 		if(e.getSource() == newGame) {
 			System.out.println("Alternativ för start av spel");
 		}
-		
 	}
 	public static void main(String[] arg) {
 		new Frame();
