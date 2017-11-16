@@ -1,25 +1,13 @@
 package quizkampen;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Frame extends JFrame implements ActionListener {
 
@@ -28,7 +16,7 @@ public class Frame extends JFrame implements ActionListener {
 	JPanel rond2Panel = new JPanel();
 	JPanel answerPanel = new JPanel();
 	JLabel answerLabel = new JLabel("");
-	JLabel userLabel = new JLabel("Användare:");
+	JLabel userLabel = new JLabel("AnvÃ¤ndare:");
 	Player user = new Player();
 	JLabel userName; 
 	JButton newGame = new JButton("Starta ett nytt spel");
@@ -41,12 +29,12 @@ public class Frame extends JFrame implements ActionListener {
 	Border innerBorder2;
 	Border outerBorder;
 	
-	JLabel chooseCategory = new JLabel("Välj Kategori: ");
-	JLabel chooseCategory2 = new JLabel("Välj Kategori: ");
+	JLabel chooseCategory = new JLabel("VÃ¤lj Kategori: ");
+	JLabel chooseCategory2 = new JLabel("VÃ¤lj Kategori: ");
 	Category sport = new Category("Sport");
 	Category politics = new Category("Politik");
-	Category music = new Category("musik");
-	Category whatever = new Category("whatever");
+	Category music = new Category("Musik");
+	Category whatever = new Category("Whatever");
 	JButton category1 = new JButton(sport.getName());
 	JButton category2 = new JButton(politics.getName());
 	JButton category3 = new JButton(music.getName());
@@ -56,10 +44,10 @@ public class Frame extends JFrame implements ActionListener {
 	JButton category7 = new JButton(music.getName());
 	JButton category8 = new JButton(whatever.getName());
 	
-	Question sportQuestion1 = new Question("SportFråga1", "Rätt Svar", "Fel Svar","Fel Svar","Fel Svar");
-	Question sportQuestion2 = new Question("SportFråga2", "Rätt Svar", "Fel Svar","Fel Svar","Fel Svar");
-	Question musicQuestion1 = new Question("MusikFråga1", "Rätt Svar", "Fel Svar","Fel Svar","Fel Svar");
-	Question musicQuestion2 = new Question("MusikFråga2", "Rätt Svar", "Fel Svar","Fel Svar","Fel Svar");
+	Question sportQuestion1 = new Question("SportFrÃ¥ga1", "RÃ¤tt Svar", "Fel Svar","Fel Svar","Fel Svar");
+	Question sportQuestion2 = new Question("SportFrÃ¥ga2", "RÃ¤tt Svar", "Fel Svar","Fel Svar","Fel Svar");
+	Question musicQuestion1 = new Question("MusikFrÃ¥ga1", "RÃ¤tt Svar", "Fel Svar","Fel Svar","Fel Svar");
+	Question musicQuestion2 = new Question("MusikFrÃ¥ga2", "RÃ¤tt Svar", "Fel Svar","Fel Svar","Fel Svar");
 	JLabel question1 = new JLabel(sportQuestion1.getQuestion());
 	JLabel question2 = new JLabel(sportQuestion2.getQuestion());
 	JLabel question3 = new JLabel(musicQuestion1.getQuestion());
@@ -90,9 +78,9 @@ public class Frame extends JFrame implements ActionListener {
 	
 	public Frame() {
 		// Skapa spelaren namnet
-		user.setUsername(JOptionPane.showInputDialog("Ange användarnamn!"));
+		user.setUsername(JOptionPane.showInputDialog("Ange anvÃ¤ndarnamn!"));
 		userName = new JLabel(user.getUsername());
-		resultLabel = new JLabel(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
+		resultLabel = new JLabel(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"MotstÃ¥ndare");
 		resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
 		//frame layout, storlek, dfco etc
 		setLayout(new GridLayout(4,1));
