@@ -1,5 +1,6 @@
 package quizkampen;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,7 +46,7 @@ public class FrameTest extends JFrame implements ActionListener {
 	public FrameTest() {
 		// layouts, tillägg av labels och knappar på panelen, storlek, visibility etc
 		setLayout(new GridLayout(4,1));
-
+		setBackground(Color.BLUE);
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		 
@@ -56,6 +58,9 @@ public class FrameTest extends JFrame implements ActionListener {
 		userInfo.add(userNameInput);
 		userInfo.add(userName);
 		userInfo.add(resultLabel);
+		userInfo.setBackground(Color.PINK);
+		userInfo.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 10));
+		
 		resultLabel.setVisible(false);
 		userNameInput.addActionListener(this);
 		
@@ -64,7 +69,8 @@ public class FrameTest extends JFrame implements ActionListener {
 		gamePanel.add(wrongAnswer1);	wrongAnswer1.addActionListener(this);
 		gamePanel.add(wrongAnswer2);	wrongAnswer2.addActionListener(this);
 		gamePanel.add(wrongAnswer3);	wrongAnswer3.addActionListener(this);
-
+		gamePanel.setBackground(Color.GRAY);
+		
 		add(userInfo, gc);
 		
 		setSize(800,800);
@@ -121,6 +127,7 @@ public class FrameTest extends JFrame implements ActionListener {
 		if(e.getSource() == rightAnswer) {
 			setCorrectAnswerBackground();
 			userScore++;
+			
 			
 		}
 		}
