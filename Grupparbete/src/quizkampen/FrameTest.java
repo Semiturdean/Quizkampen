@@ -34,6 +34,7 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	private List<Category> categoryList = db.getCategoryList();
 	private Category category = null;
 	private List<Question> questionList; 
+	private MessagePanel messagePanel = new MessagePanel();
 	
 	private int questionCounter = 0;
 
@@ -68,6 +69,8 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		
 		
 		add(userInfo, BorderLayout.NORTH);
+		
+		add(messagePanel, BorderLayout.SOUTH);
 		
 		setSize(800,800);
 		setLocation(800,200);
@@ -120,8 +123,7 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		remove(questionPanel);
 		repaint();
 		add(categoryPanel, BorderLayout.CENTER);
-		getContentPane().invalidate();
-		getContentPane().revalidate();
+		
 		
 	}
 	
