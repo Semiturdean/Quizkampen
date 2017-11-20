@@ -134,6 +134,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 					if(clicked.getText().equalsIgnoreCase("rätt svar"))
 					{
 						c.setBackground(Color.GREEN); 
+						panelListener.setScore();
 						
 					}
 					else 

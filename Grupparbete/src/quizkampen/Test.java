@@ -94,4 +94,11 @@ public class Test extends JFrame implements PanelListener
 	}
 
 
+	@Override
+	public void setScore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }
