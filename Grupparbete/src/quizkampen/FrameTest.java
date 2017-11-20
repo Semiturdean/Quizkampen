@@ -8,12 +8,12 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 
 public class FrameTest extends JFrame implements ActionListener, PanelListener {
@@ -51,17 +51,13 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
 		add(categoryPanel, BorderLayout.CENTER);
-		 categoryPanel.setVisible(false);
+		categoryPanel.setVisible(false);
 
 		
 		
 		userInfo.setLayout(new FlowLayout());
-		userInfo.add(userLabel);
-		userInfo.add(userNameInput);
-		userInfo.add(userName);
-		userInfo.add(resultLabel);
-		userInfo.setBackground(Color.PINK);
-		userInfo.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 10));
+		userInfo.add(userLabel); userInfo.add(userNameInput); userInfo.add(userName); userInfo.add(resultLabel);
+		userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
 		
 		resultLabel.setVisible(false);
 		userNameInput.addActionListener(this);
@@ -79,7 +75,7 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	public void nextQuestion() 
 	{
 		questionCounter++;
-		questionPanel.setQuestion(questionList.get(questionCounter));	
+		questionPanel.setQuestion(questionList.get(questionCounter));
 	}
 	
 
@@ -90,14 +86,12 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		setCategory(categoryName);
 		questionList = category.getQuestionList();
 		remove(categoryPanel);
-		repaint();
 		questionCounter = 0;
 		questionPanel.setQuestionCounter(0);
 		questionPanel.setQuestion(questionList.get(questionCounter));		
+		repaint();
 		add(questionPanel, BorderLayout.CENTER);
 	
-		getContentPane().invalidate();
-		getContentPane().revalidate();
 		
 	}
 	public void setCategory(String categoryName)
@@ -118,28 +112,40 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	public void questionToCategoryPanel() 
 	{
 		remove(questionPanel);
-		repaint();
+		getNewScoreBoard();
 		add(categoryPanel, BorderLayout.CENTER);
-		getContentPane().invalidate();
-		getContentPane().revalidate();
+		
 		
 	}
 	
+	public void getNewScoreBoard() {
+		
+		userInfo.remove(resultLabel);
+		userInfo.add(resultLabel);
+		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
+		categoryPanel.setVisible(true);
+		resultLabel.setVisible(true);
+		
+	}
 	// skapar scoreboarden under spelets gång
 	 public void getScoreBoard(){
-		 	resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
-			resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
-			userInfo.add(resultLabel);
-			resultLabel.setVisible(true);
-			categoryPanel.setVisible(true);
-			userInfo.remove(newGame);
-			userInfo.remove(userLabel);
-			userInfo.remove(userName);
+		
+		 resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motståndare"); 	
+		resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
+		userInfo.add(resultLabel);
+		resultLabel.setVisible(true);
+		categoryPanel.setVisible(true);
 }
-	// private void removeUnusedComponents() {	}  //Metoden kommer behövas senare//
-	// private void setFalse(){} 	//Sätter fel svar till röd och alternativ tar bort svartsalternativen efter några sekunder eller tar bort ActionListener//
-	// private void setTrue(){} //	-||- rätt svar till grön
-	// private void setScore(){}
+
+	public void setScore(){
+		 
+		userInfo.remove(resultLabel);
+		 userScore++;
+		 repaint();
+		 getScoreBoard();
+		
+		 
+	 }
 	 	
 	
 	
@@ -153,6 +159,9 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 				newGame.addActionListener(this);
 		}
 		if (e.getSource() == newGame) {
+			userInfo.remove(newGame);
+			userInfo.remove(userLabel);
+			userInfo.remove(userName);
 			getScoreBoard();
 		}
 		}
