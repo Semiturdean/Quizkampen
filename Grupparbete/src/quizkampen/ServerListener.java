@@ -1,46 +1,52 @@
 package quizkampen;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerListener extends Thread {
+public class ServerListener {
     private ServerSocket listenerSocket;
     private int port;
-    private boolean listening;
+    private Socket client1;
+    private Socket client2;
 
     ServerListener(int port) throws IOException {
         this.port = port;
-        listening = true;
         listenerSocket = new ServerSocket(port);
-    }
 
-    void stopServer() {
-        listening = false;
-    }
-
-    @Override
-    public void run() {
         System.out.println("Server listener has started, awaiting connections...");
         try {
-            while (listening) {
-                Socket clientSocket = listenerSocket.accept();
-                GameRoom serverHandler = new GameRoom(clientSocket);
+            while (true) {
+                client1 = listenerSocket.accept();
+                System.out.println("First client connected: " + client1.getInetAddress().getHostName());
+
+                /*ObjectOutputStream toClient = new ObjectOutputStream(client1.getOutputStream());
+                toClient.writeObject("Waiting on another player...");
+                toClient.close();*/
+
+                client2 = listenerSocket.accept();
+                System.out.println("Second client connected: " + client2.getInetAddress().getHostName());
+
+                GameRoom serverHandler = new GameRoom(client1, client2);
                 Thread t = new Thread(serverHandler);
                 t.start();
-                System.out.println("Client " + clientSocket.getInetAddress().getHostName() + " has connected.");
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                listenerSocket.close();
+                System.out.println("Stopping server listener");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        System.out.println("Stopping server listener");
     }
 
     public static void main(String[] args) {
         try {
             ServerListener s = new ServerListener(4444);
-            s.start();
         } catch (IOException e) {
             System.out.println("Could not create a server socket with the given port.\n" +
                     "The port could be in use.");
