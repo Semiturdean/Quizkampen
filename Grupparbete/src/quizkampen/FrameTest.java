@@ -1,28 +1,22 @@
 package quizkampen;
 
-import java.awt.BasicStroke;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
-public class FrameTest extends JFrame implements ActionListener {
+
+public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	
 	// paneler,labels,knappar
 	private JPanel userInfo = new JPanel();
@@ -32,25 +26,33 @@ public class FrameTest extends JFrame implements ActionListener {
 	private JButton newGame = new JButton("Starta ett nytt spel");
 	private int userScore = 0;
 	private int opponentScore = 0;
-	private JPanel gamePanel = new JPanel();
 	private JTextField userNameInput = new JTextField(10);
 	private JLabel resultLabel = new JLabel();
-	private Question questions = new Question("Fråga", "Rätt svar", "Fel svar", "Fel svar", "Fel svar");
-	private JLabel question = new JLabel(questions.getQuestion());
-	private JButton rightAnswer = new JButton(questions.getRightChoice());
-	private JButton wrongAnswer1 = new JButton(questions.getWrongChoice1());
-	private JButton wrongAnswer2 = new JButton(questions.getWrongChoice1());
-	private JButton wrongAnswer3 = new JButton(questions.getWrongChoice1());
+	private QuestionPanel questionPanel = new QuestionPanel();
+	private CategoryPanel categoryPanel = new CategoryPanel();
+	private Database db = new Database();
+	private List<Category> categoryList = db.getCategoryList();
+	private Category category = null;
+	private List<Question> questionList; 
+	
+	private int questionCounter = 0;
+
 	
 	
 	public FrameTest() {
 		// layouts, tillägg av labels och knappar på panelen, storlek, visibility etc
-		setLayout(new GridLayout(4,1));
+		setLayout(new BorderLayout());
 		setBackground(Color.BLUE);
-		GridBagConstraints gc = new GridBagConstraints();
+
 		
-		 
-		gc.gridx = 0; gc.gridy = 0; gc.weighty = 1;
+		questionPanel.setPanelListener(this);
+		
+		
+		categoryPanel.setButtonNames(categoryList);
+		categoryPanel.setPanelListener(this);
+		add(categoryPanel, BorderLayout.CENTER);
+		 categoryPanel.setVisible(false);
+
 		
 		
 		userInfo.setLayout(new FlowLayout());
@@ -64,47 +66,82 @@ public class FrameTest extends JFrame implements ActionListener {
 		resultLabel.setVisible(false);
 		userNameInput.addActionListener(this);
 		
-		gamePanel.add(question);
-		gamePanel.add(rightAnswer); 	rightAnswer.addActionListener(this);
-		gamePanel.add(wrongAnswer1);	wrongAnswer1.addActionListener(this);
-		gamePanel.add(wrongAnswer2);	wrongAnswer2.addActionListener(this);
-		gamePanel.add(wrongAnswer3);	wrongAnswer3.addActionListener(this);
-		gamePanel.setBackground(Color.GRAY);
 		
-		add(userInfo, gc);
+		add(userInfo, BorderLayout.NORTH);
 		
 		setSize(800,800);
 		setLocation(800,200);
 		setVisible(true);
 		setDefaultCloseOperation(3);
 	}
+	
+	@Override
+	public void nextQuestion() 
+	{
+		questionCounter++;
+		questionPanel.setQuestion(questionList.get(questionCounter));	
+	}
+	
+
+
+	@Override
+	public void categoryToQuestionPanel(String categoryName) 
+	{	
+		setCategory(categoryName);
+		questionList = category.getQuestionList();
+		remove(categoryPanel);
+		repaint();
+		questionCounter = 0;
+		questionPanel.setQuestionCounter(0);
+		questionPanel.setQuestion(questionList.get(questionCounter));		
+		add(questionPanel, BorderLayout.CENTER);
+	
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+		
+	}
+	public void setCategory(String categoryName)
+	{
+		for(int i=0; i<categoryList.size(); i++)
+		{
+			if (categoryName.equalsIgnoreCase(categoryList.get(i).getName()))
+			{
+				category = categoryList.get(i);
+				break;
+				
+			}
+		}
+	}
+
+
+	@Override
+	public void questionToCategoryPanel() 
+	{
+		remove(questionPanel);
+		repaint();
+		add(categoryPanel, BorderLayout.CENTER);
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+		
+	}
+	
 	// skapar scoreboarden under spelets gång
-	 private void getScoreBoard(){
+	 public void getScoreBoard(){
 		 	resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
 			resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
 			userInfo.add(resultLabel);
 			resultLabel.setVisible(true);
+			categoryPanel.setVisible(true);
 			userInfo.remove(newGame);
 			userInfo.remove(userLabel);
 			userInfo.remove(userName);
-			add(gamePanel);
 }
 	// private void removeUnusedComponents() {	}  //Metoden kommer behövas senare//
 	// private void setFalse(){} 	//Sätter fel svar till röd och alternativ tar bort svartsalternativen efter några sekunder eller tar bort ActionListener//
 	// private void setTrue(){} //	-||- rätt svar till grön
 	// private void setScore(){}
-	// private void setQuestions() {} // Behövs? vänta och se hur Sina fixat sin frågepanel
 	 	
-	 // Sätter färgen för fel svar
-	 private void setWrongAnswerColor(){
-		 wrongAnswer1.setBackground(Color.RED);
-		 wrongAnswer2.setBackground(Color.RED);
-		 wrongAnswer3.setBackground(Color.RED);
-	 }
-	 	// Sätter färgen för rätt svar
-	 private void setCorrectAnswerBackground() {
-		 rightAnswer.setBackground(Color.GREEN);
-	 }
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -117,18 +154,6 @@ public class FrameTest extends JFrame implements ActionListener {
 		}
 		if (e.getSource() == newGame) {
 			getScoreBoard();
-		}
-		if(e.getSource() == wrongAnswer1 || e.getSource() == wrongAnswer2 || e.getSource() == wrongAnswer3) {
-			if(wrongAnswer1.getAction() == null || wrongAnswer2.getAction() == null || wrongAnswer3.getAction() == null) {
-				setWrongAnswerColor();
-				setCorrectAnswerBackground();
-			}
-			}
-		if(e.getSource() == rightAnswer) {
-			setCorrectAnswerBackground();
-			userScore++;
-			
-			
 		}
 		}
 		

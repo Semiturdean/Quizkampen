@@ -44,11 +44,6 @@ public class Test extends JFrame implements PanelListener
 		questionPanel.setQuestion(questionList.get(questionCounter));	
 	}
 	
-	public static void main(String[] args)
-	{
-
-		Test test = new Test();
-	}
 
 
 	@Override
@@ -91,12 +86,12 @@ public class Test extends JFrame implements PanelListener
 		
 	}
 	 
-	
 
-
-	
-
-
+	public static void main(String[] args)
+	{
+		
+		Test test = new Test();
+	}
 
 
 }
