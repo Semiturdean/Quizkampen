@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ public class CategoryPanel extends JPanel implements ActionListener
 	
 	//Den här bestämmer hur många kategorier vi kommer att ha
 	private int numberOfCategories = 3;
+	String categoryName = "";
 	
 	public CategoryPanel()
 	{
@@ -52,14 +54,7 @@ public class CategoryPanel extends JPanel implements ActionListener
 		//buttonPanel
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(numberOfCategories,0));
-		
-		//Knapparna läggs genom den här forloopen
-		for(int i=0; i<numberOfCategories; i++)
-		{
-			JButton b = new JButton("Kategori"+i);
-			buttonPanel.add(b);
-			b.addActionListener(this);
-		}
+		placeButtons();
 		mainPanel.add(buttonPanel);
 		
 		add(mainPanel, BorderLayout.CENTER);
@@ -77,14 +72,12 @@ public class CategoryPanel extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		String category = "";
 		for(Component c : buttonPanel.getComponents())
 		{
 			if(e.getSource() == c)
 			{
 				c.setBackground(Color.YELLOW);
-				System.out.println(c.getName());
-				category = c.getName();
+				categoryName = ((AbstractButton) c).getText();
 				((AbstractButton) c).removeActionListener(this);
 				nextBtn.setVisible(true);
 			}
@@ -94,17 +87,50 @@ public class CategoryPanel extends JPanel implements ActionListener
 			}
 		}
 		
-		//här bestäms vad händer när man clickar på nextBtn
+		
+		/*här bestäms vad händer när man clickar på nextBtn
+		när spelaren klickar på nästa vi sätter tillbaks det originala färget på knappen 
+		samt actionlistenern så att nästa gång vi kallar fram panelen allt är som början  */
 		if(e.getSource() == nextBtn)
 		{
-			panelListener.categoryToQuestionPanel(category);
+			for(Component c : buttonPanel.getComponents())
+			{
+				c.setBackground(nextBtn.getBackground());
+				((AbstractButton) c).addActionListener(this);
+			}
+			nextBtn.setVisible(false);
+			
+			//raden nedan kommunicerar kategorin som har valts till framen
+			panelListener.categoryToQuestionPanel(categoryName);
 		}
 		
 	}
-
+	
+	//Den här metoden används senare i framen för att koppla den här panelen till interfacet
 	public void setPanelListener(PanelListener panelListener)
 	{
 		this.panelListener = panelListener;
+	}
+	
+	//Den här metoden lägger knapparna på buttonPanel
+	public void placeButtons()
+	{
+		//Knapparna läggs genom den här forloopen
+				for(int i=0; i<numberOfCategories; i++)
+				{
+					JButton b = new JButton("Kategori"+i);
+					buttonPanel.add(b);
+					b.addActionListener(this);
+				}
+	}
+	
+	//Den här metoden sätter kategorinamn på knapparna (OBS. Det är framen som skickar en lista med kategorier hit)
+	public void setButtonNames(List<Category> cl)
+	{
+		for(int i=0; i<numberOfCategories;i++)
+		{
+			((AbstractButton)buttonPanel.getComponents()[i]).setText(cl.get(i).getName());
+		}
 	}
 
 }

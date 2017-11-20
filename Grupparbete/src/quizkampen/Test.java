@@ -13,8 +13,10 @@ public class Test extends JFrame implements PanelListener
 	private CategoryPanel categoryPanel = new CategoryPanel();
 	private Database db = new Database();
 	private List<Category> categoryList = db.getCategoryList();
-	private Category category;
-	private List<Question> questionList;
+	private Category category = null;
+	private List<Question> questionList; 
+	
+	int questionCounter = 0;
 	
 	
 	public Test()
@@ -25,7 +27,7 @@ public class Test extends JFrame implements PanelListener
 		questionPanel.setPanelListener(this);
 		
 		
-		
+		categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
 		add(categoryPanel, BorderLayout.CENTER);
 		
@@ -38,41 +40,58 @@ public class Test extends JFrame implements PanelListener
 	@Override
 	public void nextQuestion() 
 	{
-		remove(questionPanel);
-		repaint();
-		add(questionPanel);
-		getContentPane().invalidate();
-		getContentPane().revalidate();
+		questionCounter++;
+		questionPanel.setQuestion(questionList.get(questionCounter));	
 	}
 	
 	public static void main(String[] args)
 	{
-//		String ctype = "musik";
+
 		Test test = new Test();
-//		Database db = new Database();
-//		List<Category> cl = db.getCategoryList();
-//		List<Question> ql = null;
-//		
-//		for(int i=0; i<cl.size(); i++)
-//		{
-//			if(cl.get(i).getName().equalsIgnoreCase(ctype))
-//			{
-//				ql = cl.get(i).getQuestionList();
-//			}
-//		}
-//		System.out.println(ql.get(0).getQuestion());
 	}
 
 
 	@Override
-	public void categoryToQuestionPanel(String str) 
-	{
+	public void categoryToQuestionPanel(String categoryName) 
+	{	
+		setCategory(categoryName);
+		questionList = category.getQuestionList();
 		remove(categoryPanel);
+		repaint();
+		questionCounter = 0;
+		questionPanel.setQuestionCounter(0);
+		questionPanel.setQuestion(questionList.get(questionCounter));		
 		add(questionPanel, BorderLayout.CENTER);
 		getContentPane().invalidate();
 		getContentPane().revalidate();
 		
 	}
+	public void setCategory(String categoryName)
+	{
+		for(int i=0; i<categoryList.size(); i++)
+		{
+			if (categoryName.equalsIgnoreCase(categoryList.get(i).getName()))
+			{
+				category = categoryList.get(i);
+				break;
+				
+			}
+		}
+	}
+
+
+	@Override
+	public void questionToCategoryPanel() 
+	{
+		remove(questionPanel);
+		repaint();
+		add(categoryPanel, BorderLayout.CENTER);
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+		
+	}
+	 
+	
 
 
 	
