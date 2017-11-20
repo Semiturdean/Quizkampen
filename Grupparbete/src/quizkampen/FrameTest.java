@@ -1,17 +1,24 @@
 package quizkampen;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 public class FrameTest extends JFrame implements ActionListener {
 	
@@ -24,14 +31,20 @@ public class FrameTest extends JFrame implements ActionListener {
 	private int userScore = 0;
 	private int opponentScore = 0;
 	private JPanel gamePanel = new JPanel();
-	private JLabel testLabel = new JLabel("TEST");	//Bara för att se vart den hamnar i panelen
 	private JTextField userNameInput = new JTextField(10);
 	private JLabel resultLabel = new JLabel();
+	private Question questions = new Question("Fråga", "Rätt svar", "Fel svar", "Fel svar", "Fel svar");
+	private JLabel question = new JLabel(questions.getQuestion());
+	private JButton rightAnswer = new JButton(questions.getRightChoice());
+	private JButton wrongAnswer1 = new JButton(questions.getWrongChoice1());
+	private JButton wrongAnswer2 = new JButton(questions.getWrongChoice1());
+	private JButton wrongAnswer3 = new JButton(questions.getWrongChoice1());
 	
 	
 	public FrameTest() {
 		// layouts, tillägg av labels och knappar på panelen, storlek, visibility etc
 		setLayout(new GridLayout(4,1));
+
 		GridBagConstraints gc = new GridBagConstraints();
 		
 		 
@@ -46,7 +59,12 @@ public class FrameTest extends JFrame implements ActionListener {
 		resultLabel.setVisible(false);
 		userNameInput.addActionListener(this);
 		
-		gamePanel.add(testLabel);
+		gamePanel.add(question);
+		gamePanel.add(rightAnswer); 	rightAnswer.addActionListener(this);
+		gamePanel.add(wrongAnswer1);	wrongAnswer1.addActionListener(this);
+		gamePanel.add(wrongAnswer2);	wrongAnswer2.addActionListener(this);
+		gamePanel.add(wrongAnswer3);	wrongAnswer3.addActionListener(this);
+
 		add(userInfo, gc);
 		
 		setSize(800,800);
@@ -54,7 +72,7 @@ public class FrameTest extends JFrame implements ActionListener {
 		setVisible(true);
 		setDefaultCloseOperation(3);
 	}
-	
+	// skapar scoreboarden under spelets gång
 	 private void getScoreBoard(){
 		 	resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
 			resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
@@ -68,7 +86,19 @@ public class FrameTest extends JFrame implements ActionListener {
 	// private void removeUnusedComponents() {	}  //Metoden kommer behövas senare//
 	// private void setFalse(){} 	//Sätter fel svar till röd och alternativ tar bort svartsalternativen efter några sekunder eller tar bort ActionListener//
 	// private void setTrue(){} //	-||- rätt svar till grön
-	// private void setScore(){} // Ökar scorecounten för spelare och opponent, tillsätter till JLabeln
+	// private void setScore(){}
+	// private void setQuestions() {} // Behövs? vänta och se hur Sina fixat sin frågepanel
+	 	
+	 // Sätter färgen för fel svar
+	 private void setWrongAnswerColor(){
+		 wrongAnswer1.setBackground(Color.RED);
+		 wrongAnswer2.setBackground(Color.RED);
+		 wrongAnswer3.setBackground(Color.RED);
+	 }
+	 	// Sätter färgen för rätt svar
+	 private void setCorrectAnswerBackground() {
+		 rightAnswer.setBackground(Color.GREEN);
+	 }
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -82,8 +112,19 @@ public class FrameTest extends JFrame implements ActionListener {
 		if (e.getSource() == newGame) {
 			getScoreBoard();
 		}
+		if(e.getSource() == wrongAnswer1 || e.getSource() == wrongAnswer2 || e.getSource() == wrongAnswer3) {
+			if(wrongAnswer1.getAction() == null || wrongAnswer2.getAction() == null || wrongAnswer3.getAction() == null) {
+				setWrongAnswerColor();
+				setCorrectAnswerBackground();
+			}
+			}
+		if(e.getSource() == rightAnswer) {
+			setCorrectAnswerBackground();
+			userScore++;
+			
+		}
+		}
 		
-	}
 	public static void main(String[] arg) {
 		new FrameTest();
 	}
