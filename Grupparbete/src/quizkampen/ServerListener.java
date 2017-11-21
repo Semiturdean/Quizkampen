@@ -1,15 +1,16 @@
 package quizkampen;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class ServerListener {
     private ServerSocket listenerSocket;
     private int port;
-    private Socket client1;
-    private Socket client2;
+
+    /*
+    Server that constantly listens for incoming connections from clients.
+    Creates a game room when two client connects.
+     */
 
     ServerListener(int port) throws IOException {
         this.port = port;
@@ -18,19 +19,13 @@ public class ServerListener {
         System.out.println("Server listener has started, awaiting connections...");
         try {
             while (true) {
-                client1 = listenerSocket.accept();
-                System.out.println("First client connected: " + client1.getInetAddress().getHostName());
-
-                /*ObjectOutputStream toClient = new ObjectOutputStream(client1.getOutputStream());
-                toClient.writeObject("Waiting on another player...");
-                toClient.close();*/
-
-                client2 = listenerSocket.accept();
-                System.out.println("Second client connected: " + client2.getInetAddress().getHostName());
-
-                GameRoom serverHandler = new GameRoom(client1, client2);
-                Thread t = new Thread(serverHandler);
-                t.start();
+                GameRoom game = new GameRoom();
+                GameRoomPlayer player1 = new GameRoomPlayer(listenerSocket.accept(), game, 'X');
+                System.out.println("First client connected.");
+                GameRoomPlayer player2 = new GameRoomPlayer(listenerSocket.accept(), game, 'O');
+                System.out.println("Second client connected.");
+                player1.start();
+                player2.start();
             }
         } catch (IOException e) {
             e.printStackTrace();

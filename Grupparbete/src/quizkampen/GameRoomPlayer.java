@@ -3,12 +3,14 @@ package quizkampen;
 import java.io.*;
 import java.net.Socket;
 
-public class Player implements Runnable {
+public class GameRoomPlayer extends Thread {
 	private String username;
 	private String password;
 	private String membershipType;
 	private Socket serverConnection;
     private Protocol protocol;
+    private GameRoom game;
+    private char playerMark;
 
 	public String getUsername() {
 		return username;
@@ -34,14 +36,26 @@ public class Player implements Runnable {
 		this.membershipType = ((membershipType == "basic") || (membershipType == "premium") ? membershipType : null);
 	}
 
+    public Socket getServerConnection() {
+        return serverConnection;
+    }
+
+    public void setServerConnection(Socket serverConnection) {
+        this.serverConnection = serverConnection;
+    }
+
     // Ändrat konstruktorn till tom
-    public Player() {
+    public GameRoomPlayer() {
         membershipType = "basic";
     }
 
-    public Player(Socket serverConnection, Protocol protocol) {
+    public GameRoomPlayer(Socket serverConnection, GameRoom game, char playerMark) {
         this.serverConnection = serverConnection;
-        this.protocol = protocol;
+        this.game = game;
+        this.playerMark = playerMark;
+        protocol = new Protocol();
+        protocol.setQuestions(game.getQuestions());
+        protocol.setAnswers((game.getAnswers()));
     }
 
     @Override
@@ -52,20 +66,30 @@ public class Player implements Runnable {
                 ObjectInputStream inputStream = new ObjectInputStream(serverConnection.getInputStream())
         ) {
             // Initialization with client
-            Session input;
-            Session output = protocol.getInitialSession();
-            outputStream.writeObject(output);
+            Session fromClient;
+            Session toClient = protocol.getInitialSession();
+            outputStream.writeObject(toClient);
 
-            // Waiting on commands from server
-            while ((input = (Session)inputStream.readObject()) != null) {
+            // Waiting on commands from client
+            while ((fromClient = (Session)inputStream.readObject()) != null) {
                 // Process command
-                output = protocol.processInput(input);
+                toClient = protocol.processInput(fromClient);
 
                 // TODO Server should end round and handle it here
+                // If server has ended round, notify the game room the player is finished
+                if (toClient.getState() == ProtocolState.CLIENTENDROUND) {
+                    game.setPlayersFinished(playerMark);
+                }
 
+                // Check if both players are finished
+                if (game.isBothPlayersFinished()) {
+                    protocol = game.nextRound(protocol);
+                    toClient = protocol.getInitialSession();
+                    toClient.setState(ProtocolState.SERVERSENTQUESTION);
+                }
 
-                // Send response to server
-                outputStream.writeObject(output);
+                // Send response to client
+                outputStream.writeObject(toClient);
             }
         } catch (IOException e) {
             System.out.println("Client disconnected");

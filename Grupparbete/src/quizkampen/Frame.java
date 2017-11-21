@@ -17,7 +17,7 @@ public class Frame extends JFrame implements ActionListener {
 	JPanel answerPanel = new JPanel();
 	JLabel answerLabel = new JLabel("");
 	JLabel userLabel = new JLabel("Användare:");
-	Player user = new Player();
+	GameRoomPlayer user = new GameRoomPlayer();
 	JLabel userName; 
 	JButton newGame = new JButton("Starta ett nytt spel");
 	int userScore = 0;

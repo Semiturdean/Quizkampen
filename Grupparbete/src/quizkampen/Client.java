@@ -42,7 +42,14 @@ public class Client extends Thread {
 
                     clientChoice.setState(ProtocolState.WAITING);
                 } else if (clientChoice.getState() == ProtocolState.SERVERENDROUND) {
-                    //System.out.println("End of round");
+                    // Notifying server the client has ended its round and waiting
+                    clientChoice.setState(ProtocolState.CLIENTENDROUND);
+                    outputStream.writeObject(clientChoice);
+
+                    System.out.println("Waiting");
+                    // Server should change the state in Session object to WAITING.
+                    // Client will continue running afterwards
+                    clientChoice = (Session) inputStream.readObject();
                 }
                 outputStream.writeObject(clientChoice);
             }
