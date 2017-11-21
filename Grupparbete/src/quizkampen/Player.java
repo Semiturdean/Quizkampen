@@ -5,7 +5,7 @@ public class Player
 	private String username;
 	private String password;
 	private String membershipType;
-	// ändrat konstruktorn till tom
+	// Ã„ndrat konstruktorn till tom
 	public Player()
 	{
 		membershipType = "basic";
