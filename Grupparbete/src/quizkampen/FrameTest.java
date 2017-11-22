@@ -35,7 +35,7 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	private Category category = null;
 	private List<Question> questionList; 
 	private MessagePanel messagePanel = new MessagePanel();
-	
+	JLabel message = new JLabel("Ange ett användarnamn");
 	private int questionCounter = 0;
 
 	
@@ -53,11 +53,12 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		categoryPanel.setPanelListener(this);
 		add(categoryPanel, BorderLayout.CENTER);
 		categoryPanel.setVisible(false);
-
 		
 		
 		userInfo.setLayout(new FlowLayout());
 		userInfo.add(userLabel); userInfo.add(userNameInput); userInfo.add(userName); userInfo.add(resultLabel);
+		userInfo.add(message);
+		message.setVisible(false);
 		userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
 		
 		resultLabel.setVisible(false);
@@ -126,14 +127,12 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		userInfo.remove(resultLabel);
 		userInfo.add(resultLabel);
 		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
-		categoryPanel.setVisible(true);
-		resultLabel.setVisible(true);
 		
 	}
 	// skapar scoreboarden under spelets gång
 	 public void getScoreBoard(){
 		
-		 resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motståndare"); 	
+		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motståndare"); 	
 		resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
 		userInfo.add(resultLabel);
 		resultLabel.setVisible(true);
@@ -142,25 +141,31 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 
 	public void setScore(){
 		 
-		userInfo.remove(resultLabel);
+		 userInfo.remove(resultLabel);
 		 userScore++;
 		 repaint();
 		 getScoreBoard();
-		
 		 
 	 }
+	public void setUserInfo() {
+		if(!userName.getText().equals("")) {
+		user.setUsername(userNameInput.getText());
+		userInfo.remove(userNameInput);
+		userInfo.remove(message);
+		userInfo.add(newGame);
+		newGame.addActionListener(this);
+		}else {
+			message.setVisible(true);
+		}
+	}
 	 	
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == userNameInput) {
-			userName.setText(userNameInput.getText());
-			user.setUsername(userNameInput.getText());
-				userInfo.remove(userNameInput);
-			userInfo.add(newGame);
-				newGame.addActionListener(this);
-		}
+				userName.setText(userNameInput.getText());
+				setUserInfo();
+			}
+		
 		if (e.getSource() == newGame) {
 			userInfo.remove(newGame);
 			userInfo.remove(userLabel);

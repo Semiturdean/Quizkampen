@@ -9,7 +9,7 @@ public class Database
 	
 	private Category sport = new Category("Sport");
 	private Category music = new Category("Musik");
-	private Category computerGames = new Category("Dataspel");
+	private Category computerGames = new Category("Datorspel");
 	
 	
 	public Database()
