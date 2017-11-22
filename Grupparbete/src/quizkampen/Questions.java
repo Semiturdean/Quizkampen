@@ -16,9 +16,9 @@ public class Questions {
     private String RightAnswerTwo;
     private String RightAnswerThree;
 
-    private List<String> firstQuestionAllAnswers = new ArrayList();
-    private List<String> secondQuestionAllAnswers = new ArrayList();
-    private List<String> thirdQuestionAllAnswers = new ArrayList();
+    private List<String> firstQuestionAllAnswers = new ArrayList<>();
+    private List<String> secondQuestionAllAnswers = new ArrayList<>();
+    private List<String> thirdQuestionAllAnswers = new ArrayList<>();
 
     private List<String> answers = new ArrayList<>();
 
