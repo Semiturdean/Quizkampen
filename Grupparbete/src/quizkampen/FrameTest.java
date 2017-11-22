@@ -16,17 +16,13 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 
-public class FrameTest extends JFrame implements ActionListener, PanelListener {
+public class FrameTest extends JFrame implements PanelListener {
 	
 	// paneler,labels,knappar
 	private JPanel userInfo = new JPanel();
-	private final JLabel userLabel = new JLabel("Användare:");
 	private Player user = new Player();
-	private JLabel userName = new JLabel(""); 
-	private JButton newGame = new JButton("Starta ett nytt spel");
 	private int userScore = 0;
 	private int opponentScore = 0;
-	private JTextField userNameInput = new JTextField(10);
 	private JLabel resultLabel = new JLabel();
 	private QuestionPanel questionPanel = new QuestionPanel();
 	private CategoryPanel categoryPanel = new CategoryPanel();
@@ -35,7 +31,9 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 	private Category category = null;
 	private List<Question> questionList; 
 	private MessagePanel messagePanel = new MessagePanel();
-	JLabel message = new JLabel("Ange ett användarnamn");
+	
+	
+	private StartPanel startPanel = new StartPanel();
 	private int questionCounter = 0;
 
 	
@@ -45,27 +43,23 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		setLayout(new BorderLayout());
 		setBackground(Color.BLUE);
 
+		add(startPanel, BorderLayout.CENTER);
+		startPanel.setPanelListener(this);
 		
 		questionPanel.setPanelListener(this);
-		
-		
+			
 		categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
-		add(categoryPanel, BorderLayout.CENTER);
-		categoryPanel.setVisible(false);
-		
-		
+	
 		userInfo.setLayout(new FlowLayout());
-		userInfo.add(userLabel); userInfo.add(userNameInput); userInfo.add(userName); userInfo.add(resultLabel);
-		userInfo.add(message);
-		message.setVisible(false);
+ 		userInfo.add(resultLabel);
 		userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
-		
 		resultLabel.setVisible(false);
-		userNameInput.addActionListener(this);
+
+		getScoreBoard();
+		userInfo.setBackground(Color.PINK);
+		userInfo.setBorder(new LineBorder(Color.BLACK, 2));
 		
-		
-		add(userInfo, BorderLayout.NORTH);
 		
 		add(messagePanel, BorderLayout.SOUTH);
 		
@@ -147,35 +141,19 @@ public class FrameTest extends JFrame implements ActionListener, PanelListener {
 		 getScoreBoard();
 		 
 	 }
-	public void setUserInfo() {
-		if(!userName.getText().equals("")) {
-		user.setUsername(userNameInput.getText());
-		userInfo.remove(userNameInput);
-		userInfo.remove(message);
-		userInfo.add(newGame);
-		newGame.addActionListener(this);
-		}else {
-			message.setVisible(true);
-		}
-	}
-	 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == userNameInput) {
-				userName.setText(userNameInput.getText());
-				setUserInfo();
-			}
+
+	public void startToCategoryPanel(String username){
 		
-		if (e.getSource() == newGame) {
-			userInfo.remove(newGame);
-			userInfo.remove(userLabel);
-			userInfo.remove(userName);
-			getScoreBoard();
-		}
-		}
+		user.setUsername(username);
+		remove(startPanel);
+		repaint();
+		add(userInfo, BorderLayout.NORTH);
+		add(categoryPanel, BorderLayout.CENTER);
+		getScoreBoard();
+			
+	}
 		
 	public static void main(String[] arg) {
 		new FrameTest();
 	}
-
 }
