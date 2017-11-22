@@ -2,7 +2,6 @@ package quizkampen;
 
 public class Protocol {
     private int currentQuestion = 0;
-    private int totalRounds;
 
     private String[] questions = null;
     private String[] answers = null;
@@ -16,14 +15,17 @@ public class Protocol {
     }
 
     Protocol() {
-        // TODO
-        //totalRounds = questions.length;
+
     }
 
+    /*
+    All states starting with "SERVER" are commands sent to the client.
+    States starting with "CLIENT" are sent to the server.
+     */
     public Session processInput(Session userInput) {
         // Will runt if the state is waiting and there are more questions
         if (userInput.getState() == ProtocolState.WAITING) {
-            if (currentQuestion < questions.length) {
+            if (currentQuestion > questions.length - 1) {
                 userInput.setState(ProtocolState.SERVERENDROUND);
                 return userInput;
             } else {
@@ -39,13 +41,14 @@ public class Protocol {
             }
             userInput.setState(ProtocolState.SERVERSENTANSWER);
             currentQuestion++;
-        } else if (userInput.getState() == ProtocolState.CLIENTENDROUND) {
-
+        } else if (userInput.getState() == ProtocolState.CLIENTWAITING ||
+                userInput.getState() == ProtocolState.ENDGAME) {
+            // Just pass the session object back to server without processing
         }
         return userInput;
     }
 
-    public Session getInitialSession() {
+    public Session getNewSession() {
         currentQuestion = 0;
         Session session = new Session();
         session.setQuestion(questions[0]);

@@ -53,6 +53,11 @@ public class GameRoomPlayer extends Thread {
         this.serverConnection = serverConnection;
         this.game = game;
         this.playerMark = playerMark;
+        // Setup the protocol with all the questions and answers
+        newProtocol();
+    }
+
+    public void newProtocol() {
         protocol = new Protocol();
         protocol.setQuestions(game.getQuestions());
         protocol.setAnswers((game.getAnswers()));
@@ -65,9 +70,12 @@ public class GameRoomPlayer extends Thread {
                 ObjectOutputStream outputStream = new ObjectOutputStream(serverConnection.getOutputStream());
                 ObjectInputStream inputStream = new ObjectInputStream(serverConnection.getInputStream())
         ) {
-            // Initialization with client
+            // Send info to the game room for later communication
+            game.setPlayerOutput(outputStream, playerMark);
+
+            // Get a new session object to send between server and client
             Session fromClient;
-            Session toClient = protocol.getInitialSession();
+            Session toClient = protocol.getNewSession();
             outputStream.writeObject(toClient);
 
             // Waiting on commands from client
@@ -75,22 +83,45 @@ public class GameRoomPlayer extends Thread {
                 // Process command
                 toClient = protocol.processInput(fromClient);
 
-                // TODO Server should end round and handle it here
-                // If server has ended round, notify the game room the player is finished
-                if (toClient.getState() == ProtocolState.CLIENTENDROUND) {
-                    game.setPlayersFinished(playerMark);
+                /*
+                If client has answered all their questions for the given round,
+                notify game room and await further commands from it.
+                 */
+                if (toClient.getState() == ProtocolState.CLIENTWAITING) {
+                    game.setPlayerFinished(playerMark);
+                    int checkResult = game.nextRoundCheck();
+                    if (checkResult == 1) {           // STATE 1
+                        // Run if both players are ready
+                        newProtocol();
+                        toClient = protocol.getNewSession();
+                        toClient.setState(ProtocolState.SERVERSENTQUESTION);
+                        game.notifyOtherPlayer(playerMark);
+                    } else if (checkResult == 0) {    // STATE 0
+                        /*
+                        Wait if the other player is not finished.
+                        Getting a null from the input stream means the game room
+                        have notified the player can continue to the next round.
+                         */
+                        Object temp = inputStream.readObject();
+                        if (temp == null) {
+                            if (!game.isEndGame()) {
+                                newProtocol();
+                                toClient = protocol.getNewSession();
+                                toClient.setState(ProtocolState.SERVERSENTQUESTION);
+                            } else {
+                                toClient.setState(ProtocolState.ENDGAME);
+                            }
+                        }
+                    } else if (checkResult == 2) {    // STATE 2
+                        // No more rounds, notify both players
+                        toClient.setState(ProtocolState.ENDGAME);
+                        game.notifyOtherPlayer(playerMark);
+                    }
                 }
-
-                // Check if both players are finished
-                if (game.isBothPlayersFinished()) {
-                    protocol = game.nextRound(protocol);
-                    toClient = protocol.getInitialSession();
-                    toClient.setState(ProtocolState.SERVERSENTQUESTION);
-                }
-
                 // Send response to client
                 outputStream.writeObject(toClient);
             }
+            System.out.println("Game has ended");
         } catch (IOException e) {
             System.out.println("Client disconnected");
             // Handle when a player disconnects
