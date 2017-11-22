@@ -12,6 +12,7 @@ public class Question
 	private String wrongChoice1;
 	private String wrongChoice2;
 	private String wrongChoice3;
+
 	
 	public Question(String question, String rightChoice, String wrongChoice1,String wrongChoice2, String wrongChoice3)
 	{
@@ -42,6 +43,8 @@ public class Question
 	public String getWrongChoice3() {
 		return wrongChoice3;
 	}
+
+
 
     //0 = Fråga, 1 = ifall frågan har ställts, 2 & 3 = rätt svar, 4-6 = fel svar
     String[][] stupidQuestion = new String[][]{
