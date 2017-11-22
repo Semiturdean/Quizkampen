@@ -29,7 +29,7 @@ public class Protocol {
     }
 
     Protocol() throws IOException {
-        ChooseCategory test = new ChooseCategory(CurrentCategory);
+        ChooseCategory test = new ChooseCategory("Musik");
         totalRounds = questions.length;
     }
 
