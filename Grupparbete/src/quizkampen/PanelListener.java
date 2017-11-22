@@ -6,5 +6,6 @@ public interface PanelListener
 	public void categoryToQuestionPanel(String categoryName);
 	public void questionToCategoryPanel();
 	public void setScore();
+	public void startToCategoryPanel(String username);
 
 }
