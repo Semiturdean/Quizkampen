@@ -22,7 +22,7 @@ public class StartPanel extends JPanel implements ActionListener
 {
 	JPanel userInfo = new JPanel();
 	private JButton newGame = new JButton("Starta ett nytt spel");
-	private final JLabel userLabel = new JLabel("Användare:");
+	private final JLabel userLabel = new JLabel("Ange ett användarnamn:");
 	private JLabel userName = new JLabel(""); 
 	private JTextField userNameInput = new JTextField(10);
 	private JLabel picLabel = new JLabel(new ImageIcon("C:\\Users\\sinasa2\\Desktop\\q.png"));
@@ -31,8 +31,7 @@ public class StartPanel extends JPanel implements ActionListener
 
 	GridBagConstraints gc = new GridBagConstraints();
 	
-	public StartPanel()
-	{
+	public StartPanel(){
 		setLayout(new GridLayout(2,0));
 		setBackground(Color.PINK);
 		
@@ -82,8 +81,6 @@ public class StartPanel extends JPanel implements ActionListener
 				newGame.setVisible(true);
 				newGame.addActionListener(this);
 				userLabel.setText("Användare:");
-		}else {
-				userLabel.setText("Ange en användare:");
 		}
 	}
 		if (e.getSource() == newGame) 
