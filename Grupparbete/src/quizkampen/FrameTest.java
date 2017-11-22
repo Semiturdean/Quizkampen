@@ -31,8 +31,9 @@ public class FrameTest extends JFrame implements PanelListener {
 	private Category category = null;
 	private List<Question> questionList; 
 	private MessagePanel messagePanel = new MessagePanel();
-	private StartPanel startPanel = new StartPanel();
 	
+	
+	private StartPanel startPanel = new StartPanel();
 	private int questionCounter = 0;
 
 	
@@ -46,24 +47,18 @@ public class FrameTest extends JFrame implements PanelListener {
 		startPanel.setPanelListener(this);
 		
 		questionPanel.setPanelListener(this);
-		
-		
+			
 		categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
-		
-		
-
-		
-		
+	
 		userInfo.setLayout(new FlowLayout());
+ 		userInfo.add(resultLabel);
+		userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
+		resultLabel.setVisible(false);
+
 		getScoreBoard();
 		userInfo.setBackground(Color.PINK);
 		userInfo.setBorder(new LineBorder(Color.BLACK, 2));
-		
-		
-		
-		
-		
 		
 		
 		add(messagePanel, BorderLayout.SOUTH);
@@ -126,8 +121,6 @@ public class FrameTest extends JFrame implements PanelListener {
 		userInfo.remove(resultLabel);
 		userInfo.add(resultLabel);
 		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
-		categoryPanel.setVisible(true);
-		resultLabel.setVisible(true);
 		
 	}
 	// skapar scoreboarden under spelets gång
@@ -142,36 +135,25 @@ public class FrameTest extends JFrame implements PanelListener {
 
 	public void setScore(){
 		 
-		userInfo.remove(resultLabel);
+		 userInfo.remove(resultLabel);
 		 userScore++;
 		 repaint();
 		 getScoreBoard();
-		
 		 
 	 }
-	 	
-	
-	
-	
+
+	public void startToCategoryPanel(String username){
 		
-	@Override
-	public void startToCategoryPanel(String username)
-	{
 		user.setUsername(username);
 		remove(startPanel);
 		repaint();
 		add(userInfo, BorderLayout.NORTH);
 		add(categoryPanel, BorderLayout.CENTER);
 		getScoreBoard();
-		
-		
-		
+			
 	}
 		
 	public static void main(String[] arg) {
 		new FrameTest();
 	}
-
-	
-
 }

@@ -22,7 +22,7 @@ public class StartPanel extends JPanel implements ActionListener
 {
 	JPanel userInfo = new JPanel();
 	private JButton newGame = new JButton("Starta ett nytt spel");
-	private final JLabel userLabel = new JLabel("Användare:");
+	private final JLabel userLabel = new JLabel("Ange ett användarnamn:");
 	private JLabel userName = new JLabel(""); 
 	private JTextField userNameInput = new JTextField(10);
 	private JLabel picLabel = new JLabel(new ImageIcon("C:\\Users\\sinasa2\\Desktop\\q.png"));
@@ -31,8 +31,7 @@ public class StartPanel extends JPanel implements ActionListener
 
 	GridBagConstraints gc = new GridBagConstraints();
 	
-	public StartPanel()
-	{
+	public StartPanel(){
 		setLayout(new GridLayout(2,0));
 		setBackground(Color.PINK);
 		
@@ -48,17 +47,12 @@ public class StartPanel extends JPanel implements ActionListener
 		userName.setFont(new Font("Serif", Font.BOLD, 24));
 		newGame.setPreferredSize(new Dimension(150,50));
 		
-		userInfo.add(userLabel, gc);
-		
-		
+		userInfo.add(userLabel, gc); 
+	
 		gc.gridx = 0;
 		gc.gridy = 1;
 		
-		userInfo.add(userNameInput,gc);
-		
-		gc.gridx = 0;
-		gc.gridy = 1;
-		userInfo.add(userName, gc);
+		userInfo.add(userNameInput,gc); userInfo.add(userName, gc);
 		
 		
 		gc.gridx = 0;
@@ -74,22 +68,21 @@ public class StartPanel extends JPanel implements ActionListener
 		//picLabel.setIcon(new ImageIcon("C:\\Users\\sinasa2\\Desktop\\Q.JPG"));
 		picPanel.add(picLabel);
 		add(picPanel);
-		
-		
+			
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) 
-	{
-		
-		if (e.getSource() == userNameInput) 
-		{
-			userName.setText(userNameInput.getText());
-			username = userNameInput.getText();
-			userInfo.remove(userNameInput);
-			newGame.setVisible(true);
-			newGame.addActionListener(this);
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == userNameInput) {
+			if(!userNameInput.getText().equals("")) {
+				userName.setText(userNameInput.getText());
+				username = userNameInput.getText();
+				userInfo.remove(userNameInput);
+				newGame.setVisible(true);
+				newGame.addActionListener(this);
+				userLabel.setText("Användare:");
 		}
+	}
 		if (e.getSource() == newGame) 
 		{
 			panelListener.startToCategoryPanel(username);
