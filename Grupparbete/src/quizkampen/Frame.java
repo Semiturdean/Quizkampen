@@ -27,6 +27,7 @@ public class Frame extends JFrame implements PanelListener {
 	private Category category = null;
 	private List<Question> questionList; 
 	private MessagePanel messagePanel = new MessagePanel();
+	private EndOfRoundPanel endOfRoundPanel = new EndOfRoundPanel();
 	
 	
 	private StartPanel startPanel = new StartPanel();
@@ -43,6 +44,8 @@ public class Frame extends JFrame implements PanelListener {
 		startPanel.setPanelListener(this);
 		
 		questionPanel.setPanelListener(this);
+		
+		endOfRoundPanel.setPanelListener(this);
 			
 		categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
@@ -102,15 +105,15 @@ public class Frame extends JFrame implements PanelListener {
 	}
 
 
-	@Override
-	public void questionToCategoryPanel() 
-	{
-		remove(questionPanel);
-		getNewScoreBoard();
-		add(categoryPanel, BorderLayout.CENTER);
-		
-		
-	}
+//	@Override
+//	public void questionToCategoryPanel() 
+//	{
+//		remove(questionPanel);
+//		getNewScoreBoard();
+//		add(categoryPanel, BorderLayout.CENTER);
+//		
+//		
+//	}
 	
 	public void getNewScoreBoard() {
 		
@@ -147,6 +150,27 @@ public class Frame extends JFrame implements PanelListener {
 		add(categoryPanel, BorderLayout.CENTER);
 		getScoreBoard();
 			
+	}
+	public void endOfRoundToCategoryPanel()
+	{
+		remove(endOfRoundPanel);
+		repaint();
+		add(categoryPanel, BorderLayout.CENTER);
+	}
+	public void endOfRoundToQuestionPanel()
+	{
+		remove(endOfRoundPanel);
+		repaint();
+		add(questionPanel, BorderLayout.CENTER);
+	}
+	public void questionToEndOfRoundPanel()
+	{
+		remove(questionPanel);
+		getNewScoreBoard();
+		endOfRoundPanel.setLabel(resultLabel.getText());
+		endOfRoundPanel.enableButton();
+		repaint();
+		add(endOfRoundPanel, BorderLayout.CENTER);
 	}
 		
 	public static void main(String[] arg) {

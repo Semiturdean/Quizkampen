@@ -165,7 +165,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 				questionCounter++;
 				if(questionCounter == 3)
 				{
-					panelListener.questionToCategoryPanel();
+					panelListener.questionToEndOfRoundPanel();
 				}
 			}
 			
