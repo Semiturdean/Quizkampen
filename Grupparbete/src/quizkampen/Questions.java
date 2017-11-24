@@ -61,15 +61,15 @@ public class Questions {
     }
 
     public void setFirstQuestion(String firstQuestion) {
-        FirstQuestion = firstQuestion;
+        this.FirstQuestion = firstQuestion;
     }
 
     public void setSecondQuestion(String secondQuestion) {
-        SecondQuestion = secondQuestion;
+        this.SecondQuestion = secondQuestion;
     }
 
     public void setThirdQuestion(String thirdQuestion) {
-        ThirdQuestion = thirdQuestion;
+        this.ThirdQuestion = thirdQuestion;
     }
 
     public String getFirstQuestion() {
