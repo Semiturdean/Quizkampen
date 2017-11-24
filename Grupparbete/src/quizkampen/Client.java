@@ -24,26 +24,43 @@ public class Client extends Thread {
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             Session clientChoice;
+            // Waits for commands from server
             while ((clientChoice = (Session)inputStream.readObject()) != null) {
                 if (clientChoice.getState() == ProtocolState.SERVERSENTQUESTION) {
                     System.out.println("Server: " + clientChoice.getQuestion());
-                    clientChoice.setAnswer(userInput.readLine().trim()); // Client answers question here
+                    // Client answers question here
+                    clientChoice.setAnswer(userInput.readLine().trim());
                     clientChoice.setState(ProtocolState.CLIENTSENTANSWER);
                 } else if (clientChoice.getState() == ProtocolState.SERVERSENTANSWER) {
                     // Answer result goes here
+                    // Update GUI button colors depending on answer
                     if (clientChoice.getVerdict()) {
                         System.out.println("Du svarade rätt!");
                     } else {
                         System.out.println("Du svarade fel!");
                     }
-                    // Update GUI button colors depending on answer
 
                     clientChoice.setState(ProtocolState.WAITING);
+                } else if (clientChoice.getState() == ProtocolState.SERVERENDROUND) {
+                    // Notifying server the client has ended its round and waiting
+                    clientChoice.setState(ProtocolState.CLIENTWAITING);
+                    outputStream.writeObject(clientChoice);
+
+                    System.out.println("Waiting for next round");
+                    // Server should change the state in Session object to WAITING.
+                    // Client will continue running afterwards
+                    clientChoice = (Session) inputStream.readObject();
+                } else if (clientChoice.getState() == ProtocolState.ENDGAME) {
+                    System.out.println("Ending game");
+                    // Notify the server to stop listening for commands
+                    outputStream.writeObject(null);
+                    break;
                 }
                 outputStream.writeObject(clientChoice);
             }
+            System.out.println("Game has ended");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Server closed connection");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
