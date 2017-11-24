@@ -6,12 +6,13 @@ import java.util.*;
 
 public class SearchCategory extends Questions {
 
-    private List<String> threeQuestions = new ArrayList<>();
+    private List<String> questions = new ArrayList<>();
 
 
     public void readFile(File category) {
         Map<String, Integer> map = new HashMap<>();
-        while (map.size() < 3) {
+        int i = 2;
+        while (map.size() < i) {
             String s = null;
             try {
                 s = choose(category);
@@ -19,14 +20,11 @@ public class SearchCategory extends Questions {
                 e.printStackTrace();
             }
             if (!map.containsKey(s))
-                threeQuestions.add(s);
+                questions.add(map.size(), s);
             map.put(s, 0);
             map.put(s, map.get(s) + 1);
         }
-        setQuestionOne(threeQuestions.subList(0,1));
-        setQuestionTwo(threeQuestions.subList(1,2));
-        setQuestionThree(threeQuestions.subList(2,3));
-
+        setQuestions(questions);
     }
 
     public String choose(File f) throws FileNotFoundException {
@@ -43,4 +41,3 @@ public class SearchCategory extends Questions {
     }
 
 }
-
