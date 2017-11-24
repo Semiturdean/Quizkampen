@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class GameRoom {
@@ -17,6 +18,7 @@ public class GameRoom {
     private ObjectOutputStream playerXOutput;
     private ObjectOutputStream playerOOutput;
     private boolean endGame;
+    private ChooseCategory category;
 
     public boolean isEndGame() {
         return endGame;
@@ -28,6 +30,10 @@ public class GameRoom {
 
     public String[] getQuestions() {
         return questions;
+    }
+
+    public void setQuestions(List<String> q1, List<String> q2, List<String> q3) {
+
     }
 
     public void setPlayerOutput(ObjectOutputStream stream, char playerMark) {
@@ -46,13 +52,14 @@ public class GameRoom {
         }
     }
 
-    GameRoom() {
+    GameRoom() throws IOException {
         initProperties();
         initGameInfo();
         currentRound = 0;
         endGame = false;
         playerOFinished = false;
         playerXFinished = false;
+        category = new ChooseCategory("Geografi");
     }
 
     // TODO Create methods getting specific questions/answers from a category and the amount
