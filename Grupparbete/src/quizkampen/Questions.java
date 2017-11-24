@@ -16,9 +16,9 @@ public class Questions {
     private String RightAnswerTwo;
     private String RightAnswerThree;
 
-    private List<String> firstQuestionAllAnswers = new ArrayList();
-    private List<String> secondQuestionAllAnswers = new ArrayList();
-    private List<String> thirdQuestionAllAnswers = new ArrayList();
+    private List<String> firstQuestionAllAnswers = new ArrayList<>();
+    private List<String> secondQuestionAllAnswers = new ArrayList<>();
+    private List<String> thirdQuestionAllAnswers = new ArrayList<>();
 
     private List<String> answers = new ArrayList<>();
 
@@ -61,15 +61,15 @@ public class Questions {
     }
 
     public void setFirstQuestion(String firstQuestion) {
-        FirstQuestion = firstQuestion;
+        this.FirstQuestion = firstQuestion;
     }
 
     public void setSecondQuestion(String secondQuestion) {
-        SecondQuestion = secondQuestion;
+        this.SecondQuestion = secondQuestion;
     }
 
     public void setThirdQuestion(String thirdQuestion) {
-        ThirdQuestion = thirdQuestion;
+        this.ThirdQuestion = thirdQuestion;
     }
 
     public String getFirstQuestion() {
