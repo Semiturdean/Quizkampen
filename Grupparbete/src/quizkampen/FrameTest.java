@@ -20,7 +20,7 @@ public class FrameTest extends JFrame implements PanelListener {
 	
 	// paneler,labels,knappar
 	private JPanel userInfo = new JPanel();
-	private Player user = new Player();
+	private GameRoomPlayer user = new GameRoomPlayer();
 	private int userScore = 0;
 	private int opponentScore = 0;
 	private JLabel resultLabel = new JLabel();
