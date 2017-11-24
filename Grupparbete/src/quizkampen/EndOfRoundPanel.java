@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class EndOfRoundPanel extends JPanel implements ActionListener
 {
@@ -23,6 +24,7 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 	public EndOfRoundPanel()
 	{
 		setLayout(new GridLayout(2,0));
+		setBorder(new LineBorder(Color.BLACK,5));
 		
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.LIGHT_GRAY);
