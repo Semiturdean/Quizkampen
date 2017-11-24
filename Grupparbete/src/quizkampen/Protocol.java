@@ -1,59 +1,57 @@
 package quizkampen;
 
-import java.io.IOException;
-
 public class Protocol {
-    private static final int WAITING = 0;
-    private static final int SERVERSENTQUESTION = 1;
-    private static final int CLIENTSENTANSWER = 2;
-    private static final int SERVERSENTANSWER = 3;
-    private static final int ROUNDCHECK = 4;
-
     private int currentQuestion = 0;
-    private int currentRound = 0;
-    private int totalRounds;
 
-    String[] Categories = new String[]{"Musik, Geografi, Historia"};
-    String CurrentCategory = "Musik";
-    ChooseCategory test = new ChooseCategory(CurrentCategory);
+    private String[] questions = null;
+    private String[] answers = null;
 
-    private String[] questions = {"ETT", "TVÅ", "TRE"};
-    private String[] answers = {"1", "2", "3"};
-
-    public String[] getQuestions() {
-        return questions;
+    public void setQuestions(String[] questions) {
+        this.questions = questions;
     }
 
-    public String[] getAnswers() {
-        return answers;
+    public void setAnswers(String[] answers) {
+        this.answers = answers;
     }
 
-    Protocol() throws IOException {
-        ChooseCategory test = new ChooseCategory("Musik");
-        totalRounds = questions.length;
+    Protocol() {
+
     }
 
+    /*
+    All states starting with "SERVER" are commands sent to the client.
+    States starting with "CLIENT" are sent to the server.
+     */
     public Session processInput(Session userInput) {
+        // Will runt if the state is waiting and there are more questions
         if (userInput.getState() == ProtocolState.WAITING) {
-            // Will run after first initialization and next question
-            userInput.setQuestion(test.getFirstQuestion());
-            userInput.setState(ProtocolState.SERVERSENTQUESTION);
+            if (currentQuestion > questions.length - 1) {
+                userInput.setState(ProtocolState.SERVERENDROUND);
+                return userInput;
+            } else {
+                userInput.setQuestion(questions[currentQuestion]);
+                userInput.setState(ProtocolState.SERVERSENTQUESTION);
+            }
         } else if (userInput.getState() == ProtocolState.CLIENTSENTANSWER) {
             // Runs after the client has answered
-            if (userInput.getAnswer().equalsIgnoreCase(test.getRightAnswerOne())) {
+            if (userInput.getAnswer().equalsIgnoreCase(answers[currentQuestion])) {
                 userInput.setVerdict(true);
             } else {
                 userInput.setVerdict(false);
             }
             userInput.setState(ProtocolState.SERVERSENTANSWER);
             currentQuestion++;
+        } else if (userInput.getState() == ProtocolState.CLIENTWAITING ||
+                userInput.getState() == ProtocolState.ENDGAME) {
+            // Just pass the session object back to server without processing
         }
         return userInput;
     }
 
-    public Session getInitialSession() {
+    public Session getNewSession() {
+        currentQuestion = 0;
         Session session = new Session();
-        session.setQuestion(test.getFirstQuestion());
+        session.setQuestion(questions[0]);
         return session;
     }
 }
