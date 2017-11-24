@@ -25,7 +25,7 @@ public class StartPanel extends JPanel implements ActionListener
 	private final JLabel userLabel = new JLabel("Ange ett användarnamn:");
 	private JLabel userName = new JLabel(""); 
 	private JTextField userNameInput = new JTextField(10);
-	private JLabel picLabel = new JLabel(new ImageIcon("C:\\Users\\sinasa2\\Desktop\\q.png"));
+	private JLabel picLabel = new JLabel(new ImageIcon("q.png"));
 	private PanelListener panelListener;
 	String username = "";
 
