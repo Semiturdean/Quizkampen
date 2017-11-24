@@ -1,18 +1,22 @@
 package quizkampen;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Properties;
 
 public class GameRoom {
-    private boolean playerXFinished = false;
-    private boolean playerOFinished = false;
+    private boolean playerOFinished;
+    private boolean playerXFinished;
     private int totalRounds;
+    private int questionsPerRound;
     private int currentRound;
     private String[] answers;
     private String[] questions;
     private ObjectOutputStream playerXOutput;
     private ObjectOutputStream playerOOutput;
-    private boolean endGame = false;
+    private boolean endGame;
 
     public boolean isEndGame() {
         return endGame;
@@ -45,18 +49,40 @@ public class GameRoom {
     GameRoom() {
         initProperties();
         initGameInfo();
+        currentRound = 0;
+        endGame = false;
+        playerOFinished = false;
+        playerXFinished = false;
     }
 
+    // TODO Create methods getting specific questions/answers from a category and the amount
     // This method should read all the questions and answers from a file
     public void initGameInfo() {
         questions = new String[]{"ETT", "TVÅ", "TRE"};
         answers = new String[]{"1", "2", "3"};
     }
 
-    // Game setting read from a property file
+    /*
+    Game setting read from a property file.
+    If the file could not be found, default values will be used
+     */
     public void initProperties() {
-        totalRounds = 2;
-        currentRound = 0;
+        File f = new File("settings.properties");
+        if (f.exists() && !f.isDirectory()) {
+            Properties p = new Properties();
+            try {
+                p.load(new FileInputStream("settings.properties"));
+                String rounds = p.getProperty("totalRounds", "2");
+                String questions = p.getProperty("questionsPerRound", "2");
+                totalRounds = Integer.parseInt(rounds);
+                questionsPerRound = Integer.parseInt(questions);
+            } catch (IOException e) {
+                System.out.println("The file could not be found.");
+            }
+        } else {
+            totalRounds = 2;
+            questionsPerRound = 2;
+        }
     }
 
     /*
