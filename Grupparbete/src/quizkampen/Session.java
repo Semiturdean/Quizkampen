@@ -44,10 +44,4 @@ public class Session implements Serializable {
         state = ProtocolState.WAITING;
         verdict = false;
     }
-
-    Session(String question) {
-        this.question = question;
-        state = ProtocolState.WAITING;
-        verdict = false;
-    }
 }
