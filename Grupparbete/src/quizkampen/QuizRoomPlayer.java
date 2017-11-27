@@ -69,7 +69,9 @@ public class QuizRoomPlayer extends Thread {
                     //System.out.println(room.getAvailableCategories());  //TODO
                     room.chooseCategory(fromClient, this);
                     //System.out.println(room.getAvailableCategories()); //TODO
+                    System.out.println(currentQuestion);
                     startNewRound();
+                    System.out.println(currentQuestion);
                     // Notify the second client/server a category has been chosen
                     opponent.output.println(Commands.STARTROUND);
                 }
@@ -94,7 +96,8 @@ public class QuizRoomPlayer extends Thread {
         questions.addAll(room.getQuestions());
         //questions = room.getQuestions();
         answers = room.getAnswers();
-        output.println(Commands.QUESTION + questions.get(currentQuestion));
+        //output.println(Commands.QUESTION + questions.get(currentQuestion));
+        output.println(Commands.QUESTION + convertListToString());
         currentQuestion++;
     }
 
@@ -113,16 +116,14 @@ public class QuizRoomPlayer extends Thread {
         String s = "";
         for (int i = 0; i < 5; i++) {
             s += questions.get(i);
-            if (i == 0) {
-                s += "\n";
-            } else if (i > 0 && i < 4) {
+            if (i >= 0 && i < 4) {
                 s += ",";
             }
         }
         temp.subList(0,5).clear();
         questions.clear();
         questions.addAll(temp);
-        System.out.println(questions.size());
+        //System.out.println(questions.size());
         return s;
     }
 
@@ -148,8 +149,16 @@ public class QuizRoomPlayer extends Thread {
 
                     // Check if there are more questions
                     if (room.nextQuestion(currentQuestion)) {
+
+
+
+
                         output.println(Commands.QUESTION + convertListToString());
-                        output.println(Commands.QUESTION + questions.get(currentQuestion));
+
+
+
+
+                        //output.println(Commands.QUESTION + questions.get(currentQuestion));
                         currentQuestion++;
                     } else {
                         // If there are no more questions, check if there are more rounds
@@ -168,6 +177,7 @@ public class QuizRoomPlayer extends Thread {
                     startNewRound();
                 } else if (fromClient.startsWith(Commands.CATEGORY.toString())) {
                     fromClient = fromClient.substring(9);
+
                     // TODO
                 } else if (fromClient.startsWith(Commands.MESSAGE.toString())) {
                     fromClient = fromClient.substring(8);

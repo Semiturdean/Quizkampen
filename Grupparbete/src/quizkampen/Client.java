@@ -107,8 +107,9 @@ public class Client extends JFrame implements ActionListener {
         {
             // textField.getAction();
             text += textField.getText();
-            System.out.println(text);
+            //System.out.println(text);
             sendCategory(text);
+            text = "";
         }
         if(e.getSource() == textField){
 
@@ -117,6 +118,7 @@ public class Client extends JFrame implements ActionListener {
             text = Commands.ANSWER.toString();
             text += textField.getText();
             output.println(text);
+            text = "";
         }
     }
 

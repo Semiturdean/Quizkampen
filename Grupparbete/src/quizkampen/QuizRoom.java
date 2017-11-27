@@ -78,14 +78,16 @@ public class QuizRoom {
         // TODO should call a method to fetch a category's questions and answers
         chosenCategory.setCurrentCategory(category);
         chosenCategory.setCategoryQuestions();
+        questions.clear();
         questions.addAll(chosenCategory.getQuestions());
+        answers.clear();
         answers = chosenCategory.getAnswers();
         removeCategory(category);
         // Opponent will choose the category next time
         currentRoundPlayer = player.getOpponent();
         currentRound++;
 
-        System.out.println(questions);
+        //System.out.println(questions);
     }
 
     private void readPropertyFile() {
