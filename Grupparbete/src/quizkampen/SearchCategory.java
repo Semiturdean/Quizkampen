@@ -2,16 +2,14 @@ package quizkampen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class SearchCategory extends Questions {
 
     private List<String> questions = new ArrayList<>();
 
-    private int numberOfQuestions;
-
-
-    public void readFile(File category) {
+    public void readFile(File category) throws IOException {
         Map<String, Integer> map = new HashMap<>();
         int i = 2;
         while (map.size() < i) {

@@ -2,7 +2,10 @@ package quizkampen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Questions {
 
@@ -19,7 +22,7 @@ public class Questions {
     public void setAnswers() {
         Scanner s = null;
         try {
-            s = new Scanner(new File("C:\\Users\\Senad Hasic\\IdeaProjects\\Quizkampen\\Grupparbete\\src\\Svar.txt"));
+            s = new Scanner(new File("C:\\Users\\Stanley\\Documents\\Java17\\OOP\\JAVA\\QuizServer\\Svar.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
