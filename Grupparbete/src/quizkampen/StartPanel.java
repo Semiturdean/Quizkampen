@@ -43,7 +43,7 @@ public class StartPanel extends JPanel implements ActionListener
 		
 		try {
 		URL url = new URL
-		("https://res-2.cloudinary.com/westfielddg/image/fetch/c_pad,f_auto,q_auto/http://res.cloudinary.com/westfielddg/image/upload/fph0rlhpygetnd63ydxz.png");
+		("http://www.assortednonsense.com/wp-content/uploads/2013/02/Q.jpg");
 		BufferedImage img = ImageIO.read(url);
 		icon.setImage(img);
 		picLabel.setIcon(icon);
@@ -101,7 +101,7 @@ public class StartPanel extends JPanel implements ActionListener
 	}
 		if (e.getSource() == newGame) 
 		{
-			panelListener.startToCategoryPanel(username);
+			panelListener.sendToServer("USERNAME "+username);
 		}
 		
 	}

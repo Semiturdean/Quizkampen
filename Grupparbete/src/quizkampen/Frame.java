@@ -16,7 +16,7 @@ public class Frame extends JFrame implements PanelListener {
 	
 	// paneler,labels,knappar
 	private JPanel userInfo = new JPanel();
-	private GameRoomPlayer user = new GameRoomPlayer();
+	private Player user = new Player();
 	private int userScore = 0;
 	private int opponentScore = 0;
 	private JLabel resultLabel = new JLabel();

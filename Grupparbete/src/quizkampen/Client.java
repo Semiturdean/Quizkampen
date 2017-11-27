@@ -1,73 +1,285 @@
 package quizkampen;
 
-import java.io.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
-public class Client extends Thread {
-    private int port;
-    private String serverAddress;
-
+public class Client extends JFrame implements PanelListener {
+    private Socket clientConnection;
+    private BufferedReader input;
+    private PrintWriter output;
+    String text;
+    
+ // paneler,labels,knappar
+ 	private JPanel userInfo = new JPanel();
+ 	private Player user = new Player();
+ 	private Player opponent = new Player();
+ 	private int userScore = 0;
+ 	private int opponentScore = 0;
+ 	private JLabel resultLabel = new JLabel();
+ 	private QuestionPanel questionPanel = new QuestionPanel();
+ 	private CategoryPanel categoryPanel = new CategoryPanel();
+ 	private Database db = new Database();
+ 	private List<Category> categoryList = db.getCategoryList();
+ 	private Category category = null;
+ 	private List<Question> questionList; 
+ 	private MessagePanel messagePanel = new MessagePanel();
+ 	private EndOfRoundPanel endOfRoundPanel = new EndOfRoundPanel();
+ 	
+ 	
+ 	
+ 	private StartPanel startPanel = new StartPanel();
+ 	private int questionCounter = 0;
+   
     Client(String serverAddress, int port) {
-        this.serverAddress = serverAddress;
-        this.port = port;
-    }
+        try {
+            clientConnection = new Socket(serverAddress, port);
+            input = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
+            output = new PrintWriter(clientConnection.getOutputStream(), true);
+            
+         // layouts, tillägg av labels och knappar på panelen, storlek, visibility etc
+    		setLayout(new BorderLayout());
+    		setBackground(Color.BLUE);
 
-    @Override
-    public void run() {
-        // Create the necessary input- and output-stream for communication with server
-        try (
-                Socket clientSocket = new Socket(serverAddress, port);
-                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream())
-        ) {
-            System.out.println("Established connection to the server");
-            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    		add(startPanel, BorderLayout.CENTER);
+    		startPanel.setPanelListener(this);
+    		
+    		questionPanel.setPanelListener(this);
+    		
+    		endOfRoundPanel.setPanelListener(this);
+    			
+    		categoryPanel.setButtonNames(categoryList);
+    		categoryPanel.setPanelListener(this);
+    	
+    		userInfo.setLayout(new FlowLayout());
+     		userInfo.add(resultLabel);
+    		userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
+    		resultLabel.setVisible(false);
 
-            Session clientChoice;
-            // Waits for commands from server
-            while ((clientChoice = (Session)inputStream.readObject()) != null) {
-                if (clientChoice.getState() == ProtocolState.SERVERSENTQUESTION) {
-                    System.out.println("Server: " + clientChoice.getQuestion());
-                    // Client answers question here
-                    clientChoice.setAnswer(userInput.readLine().trim());
-                    clientChoice.setState(ProtocolState.CLIENTSENTANSWER);
-                } else if (clientChoice.getState() == ProtocolState.SERVERSENTANSWER) {
-                    // Answer result goes here
-                    // Update GUI button colors depending on answer
-                    if (clientChoice.getVerdict()) {
-                        System.out.println("Du svarade rÃ¤tt!");
-                    } else {
-                        System.out.println("Du svarade fel!");
-                    }
+    		getScoreBoard();
+    		userInfo.setBackground(Color.PINK);
+    		userInfo.setBorder(new LineBorder(Color.BLACK, 2));
+    		
+    		
+    		add(messagePanel, BorderLayout.SOUTH);
+    		
+    		setSize(800,800);
+    		setLocation(800,200);
+    		setVisible(true);
+    		setDefaultCloseOperation(3);
 
-                    clientChoice.setState(ProtocolState.WAITING);
-                } else if (clientChoice.getState() == ProtocolState.SERVERENDROUND) {
-                    // Notifying server the client has ended its round and waiting
-                    clientChoice.setState(ProtocolState.CLIENTWAITING);
-                    outputStream.writeObject(clientChoice);
-
-                    System.out.println("Waiting for next round");
-                    // Server should change the state in Session object to WAITING.
-                    // Client will continue running afterwards
-                    clientChoice = (Session) inputStream.readObject();
-                } else if (clientChoice.getState() == ProtocolState.ENDGAME) {
-                    System.out.println("Ending game");
-                    // Notify the server to stop listening for commands
-                    outputStream.writeObject(null);
-                    break;
-                }
-                outputStream.writeObject(clientChoice);
-            }
-            System.out.println("Game has ended");
+            startGame();
         } catch (IOException e) {
-            System.out.println("Server closed connection");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Could not connect to server");
+        }
+    }
+	
+	
+    public void startGame() throws IOException {
+        String fromServer;
+
+        fromServer = input.readLine();
+        if (fromServer.startsWith("WELCOME")) {
+           messagePanel.setLabel(fromServer);
+        }
+
+        while (true) {
+            fromServer = input.readLine();
+            if (fromServer.startsWith("WAITING"))
+            {
+                System.out.println("Waiting on other player");
+            } 
+            else if (fromServer.startsWith("QUESTION"))
+            {
+                fromServer = fromServer.substring(9);
+                System.out.println("Question: " + fromServer);
+            } 
+            else if (fromServer.startsWith("RESULT"))
+            {
+                fromServer = fromServer.substring(7);
+                if (fromServer.equalsIgnoreCase("TRUE")) 
+                {
+                    System.out.println("Correct answer");
+                } else if (fromServer.equalsIgnoreCase("FALSE")) 
+                {
+                    System.out.println("Incorrect answer");
+                }
+            } 
+            else if (fromServer.startsWith("MESSAGE")) 
+            {
+                
+            	messagePanel.setLabel(fromServer.substring(8));
+            	
+            	
+            }
+            else if(fromServer.equalsIgnoreCase("STARTTOCATEGORY"))
+            {
+            	startToCategoryPanel();
+            }
+            else if(fromServer.equalsIgnoreCase("CategoryToQuestion"))
+            {
+            	categoryToQuestionPanel();
+            }
+            else if(fromServer.equalsIgnoreCase("WAIT"))
+            {
+            	messagePanel.setLabel("Väntar på motståndare");
+            }
+            else if(fromServer.equalsIgnoreCase("startToEndOfRound"))
+            {
+            	startToEndOfRoundPanel();
+            	//endOfRoundPanel.disableButton();
+            	messagePanel.setLabel("Quizkamp");
+            }
+            
+            
+            
+            
         }
     }
 
     public static void main(String[] args) {
-        Client c = new Client("127.0.0.1", 4444);
-        c.start();
+        Client client = new Client("127.0.0.1", 4444);
     }
+
+    
+	public void nextQuestion() 
+	{
+		questionCounter++;
+		questionPanel.setQuestion(questionList.get(questionCounter));
+	}
+	
+
+
+	
+	public void categoryToQuestionPanel() 
+	{	
+		//setCategory(categoryName);
+		//questionList = category.getQuestionList();
+		remove(categoryPanel);
+		//questionCounter = 0;
+		//questionPanel.setQuestionCounter(0);
+		//questionPanel.setQuestion(questionList.get(questionCounter));		
+		repaint();
+		add(questionPanel, BorderLayout.CENTER);
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+	
+		
+	}
+	public void setCategory(String categoryName)
+	{
+		for(int i=0; i<categoryList.size(); i++)
+		{
+			if (categoryName.equalsIgnoreCase(categoryList.get(i).getName()))
+			{
+				category = categoryList.get(i);
+				break;
+				
+			}
+		}
+	}
+
+
+	
+	public void getNewScoreBoard() {
+		
+		userInfo.remove(resultLabel);
+		userInfo.add(resultLabel);
+		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+opponent.getUsername());
+		
+	}
+	// skapar scoreboarden under spelets gång
+	 public void getScoreBoard(){
+		
+		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+opponent.getUsername()); 	
+		resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
+		userInfo.add(resultLabel);
+		resultLabel.setVisible(true);
+		categoryPanel.setVisible(true);
+}
+
+	public void setScore(){
+		 
+		 userInfo.remove(resultLabel);
+		 userScore++;
+		 repaint();
+		 getScoreBoard();
+		 
+	 }
+
+	public void startToCategoryPanel()
+	{
+		remove(startPanel);
+		repaint();
+		add(userInfo, BorderLayout.NORTH);
+		add(categoryPanel, BorderLayout.CENTER);
+		getScoreBoard();
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+			
+	}
+	public void startToQuestionPanel()
+	{
+		remove(startPanel);
+		repaint();
+		add(userInfo, BorderLayout.NORTH);
+		add(questionPanel, BorderLayout.CENTER);
+		getScoreBoard();
+		getContentPane().invalidate();
+		getContentPane().revalidate();
+			
+	}
+	public void endOfRoundToCategoryPanel()
+	{
+		remove(endOfRoundPanel);
+		repaint();
+		add(categoryPanel, BorderLayout.CENTER);
+	}
+	public void endOfRoundToQuestionPanel()
+	{
+		remove(endOfRoundPanel);
+		repaint();
+		add(questionPanel, BorderLayout.CENTER);
+	}
+	public void questionToEndOfRoundPanel()
+	{
+		remove(questionPanel);
+		getNewScoreBoard();
+		endOfRoundPanel.setLabel(resultLabel.getText());
+		endOfRoundPanel.enableButton();
+		repaint();
+		add(endOfRoundPanel, BorderLayout.CENTER);
+	}
+	public void startToEndOfRoundPanel()
+	{
+		remove(startPanel);
+		getNewScoreBoard();
+		endOfRoundPanel.setLabel(resultLabel.getText());
+		repaint();
+		add(userInfo, BorderLayout.NORTH);
+		add(endOfRoundPanel, BorderLayout.CENTER);
+	}
+
+	@Override
+	public void sendToServer(String message) 
+	{
+		if(message.startsWith("USERNAME"))
+			user.setUsername(message.substring(8));
+		
+		//System.out.println(message);
+        output.println(message);
+	}
+	
+	
+	
+   	
 }

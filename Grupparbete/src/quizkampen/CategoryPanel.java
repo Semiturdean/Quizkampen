@@ -101,7 +101,7 @@ public class CategoryPanel extends JPanel implements ActionListener
 			nextBtn.setVisible(false);
 			
 			//raden nedan kommunicerar kategorin som har valts till framen
-			panelListener.categoryToQuestionPanel(categoryName);
+			panelListener.sendToServer("CATEGORY "+categoryName);
 		}
 		
 	}

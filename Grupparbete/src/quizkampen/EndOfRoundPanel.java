@@ -38,7 +38,7 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 		buttonPanel.setLayout(new GridBagLayout());
 		buttonPanel.setBackground(Color.LIGHT_GRAY);
 		nextRoundBtn.setPreferredSize(new Dimension(250,100));
-		nextRoundBtn.setEnabled(false);
+		//nextRoundBtn.setEnabled(false);
 		nextRoundBtn.addActionListener(this);
 		buttonPanel.add(nextRoundBtn);
 		add(buttonPanel);
@@ -56,6 +56,10 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 	{
 		nextRoundBtn.setEnabled(true);
 	}
+	public void disableButton()
+	{
+		nextRoundBtn.setEnabled(false);
+	}
 	public void setButtonText(String text)
 	{
 		nextRoundBtn.setText(text);
@@ -69,6 +73,6 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e) 
 	{
 		if(e.getSource() == nextRoundBtn)
-		panelListener.endOfRoundToCategoryPanel();
+		panelListener.sendToServer("");
 	}
 }
