@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class ChooseCategory extends SearchCategory {
 
-    private File Music = new File("C:\\Users\\Stanley\\Documents\\Java17\\OOP\\JAVA\\QuizServer\\Musik.txt");
+    private File Music = new File("Musik.txt");
     private File Geografi = new File("Geografi.txt");
     private File Historia = new File("Historia.txt");
 
@@ -31,9 +31,4 @@ public class ChooseCategory extends SearchCategory {
     public String getCurrentCategory() {
         return currentCategory;
     }
-
-    ChooseCategory() {
-
-    }
-
 }

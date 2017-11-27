@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QuizRoomPlayer extends Thread {
@@ -16,7 +18,7 @@ public class QuizRoomPlayer extends Thread {
     private QuizRoom room;
     private BufferedReader input;
     private PrintWriter output;
-    private List<String> questions;
+    private List<String> questions = new ArrayList<>();
     private List<String> answers;
 
     public char getPlayerMark() {
@@ -64,7 +66,9 @@ public class QuizRoomPlayer extends Thread {
                 fromClient = input.readLine();
                 if (fromClient.startsWith(Commands.CATEGORY.toString())) {
                     fromClient = fromClient.substring(9);
+                    //System.out.println(room.getAvailableCategories());  //TODO
                     room.chooseCategory(fromClient, this);
+                    //System.out.println(room.getAvailableCategories()); //TODO
                     startNewRound();
                     // Notify the second client/server a category has been chosen
                     opponent.output.println(Commands.STARTROUND);
@@ -86,7 +90,9 @@ public class QuizRoomPlayer extends Thread {
     }
 
     private void startNewRound() {
-        questions = room.getQuestions();
+        questions = new ArrayList<>();
+        questions.addAll(room.getQuestions());
+        //questions = room.getQuestions();
         answers = room.getAnswers();
         output.println(Commands.QUESTION + questions.get(currentQuestion));
         currentQuestion++;
@@ -99,6 +105,25 @@ public class QuizRoomPlayer extends Thread {
             }
         }
         return false;
+    }
+
+    private String convertListToString() {
+        List<String> temp = new ArrayList<>();
+        temp.addAll(questions);
+        String s = "";
+        for (int i = 0; i < 5; i++) {
+            s += questions.get(i);
+            if (i == 0) {
+                s += "\n";
+            } else if (i > 0 && i < 4) {
+                s += ",";
+            }
+        }
+        temp.subList(0,5).clear();
+        questions.clear();
+        questions.addAll(temp);
+        System.out.println(questions.size());
+        return s;
     }
 
     @Override
@@ -115,19 +140,15 @@ public class QuizRoomPlayer extends Thread {
 
                     // Check if the answer is correct and returns result to client
                     if (correctAnswer(fromClient)) {
-                        // TODO
                         room.addScoreToPlayerRound(playerMark);
-                        System.out.println("X: " + room.getPlayerXScorePerRound());
-                        System.out.println("O: " + room.getPlayerOScorePerRound());
                         output.println(Commands.RESULT + "TRUE");
-                        System.out.println("X: " + room.getPlayerXScorePerRound());
-                        System.out.println("O: " + room.getPlayerOScorePerRound());
                     } else {
                         output.println(Commands.RESULT + "FALSE");
                     }
 
                     // Check if there are more questions
                     if (room.nextQuestion(currentQuestion)) {
+                        output.println(Commands.QUESTION + convertListToString());
                         output.println(Commands.QUESTION + questions.get(currentQuestion));
                         currentQuestion++;
                     } else {
@@ -136,6 +157,7 @@ public class QuizRoomPlayer extends Thread {
                             currentQuestion = 0;
                             // If there are more rounds, check which player gets to choose a category
                             clientChooseCategory();
+
                         } else {
                             // End game if there are no more rounds
                             output.println(Commands.ENDGAME.toString());

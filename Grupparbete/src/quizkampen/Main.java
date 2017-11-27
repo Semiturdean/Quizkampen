@@ -7,5 +7,6 @@ public class Main {
         c.setCurrentCategory("Musik");
         c.setCategoryQuestions();
         System.out.println(c.getQuestions());
+        System.out.println(c.getAnswers());
     }
 }

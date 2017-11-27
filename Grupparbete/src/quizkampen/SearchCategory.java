@@ -11,7 +11,7 @@ public class SearchCategory extends Questions {
 
     public void readFile(File category) throws IOException {
         Map<String, Integer> map = new HashMap<>();
-        int i = 2;
+        int i = 3;
         while (map.size() < i) {
             String s = null;
             try {

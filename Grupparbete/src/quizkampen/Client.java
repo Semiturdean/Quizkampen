@@ -18,9 +18,9 @@ public class Client extends JFrame implements ActionListener {
     private BufferedReader input;
     private PrintWriter output;
     private JTextField textField = new JTextField(10);
-    private JButton button = new JButton("Category (geografi)");
-    private JButton button2 = new JButton("Send answer");
-    private String text;
+    private JButton categoryButton = new JButton("Skicka kategori");
+    private JButton sendAnswer = new JButton("Send answer");
+    private String text = "";
 
     Client(String serverAddress, int port) {
         try {
@@ -31,10 +31,10 @@ public class Client extends JFrame implements ActionListener {
 
             setLayout(new FlowLayout());
             add(textField);
-            add(button);
-            add(button2);
-            button.addActionListener(this);
-            button2.addActionListener(this);
+            add(categoryButton);
+            add(sendAnswer);
+            categoryButton.addActionListener(this);
+            sendAnswer.addActionListener(this);
             textField.addActionListener(this);
 
             setSize(300,300);
@@ -88,7 +88,6 @@ public class Client extends JFrame implements ActionListener {
                 List<String> list = splitToList(fromServer); // TODO
                 System.out.println("Please choose a category");
                 System.out.println(fromServer);
-                sendCategory("Musik");
             } // This command from the server will be received when the next next round has been loaded
               else if (fromServer.startsWith(Commands.STARTROUND.toString())) {
                 // Notify server to start the round
@@ -104,18 +103,17 @@ public class Client extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == button)
+        if(e.getSource() == categoryButton)
         {
             // textField.getAction();
-            text = Commands.CATEGORY.toString();
             text += textField.getText();
             System.out.println(text);
-            output.println(text);
+            sendCategory(text);
         }
         if(e.getSource() == textField){
 
         }
-        if (e.getSource() == button2) {
+        if (e.getSource() == sendAnswer) {
             text = Commands.ANSWER.toString();
             text += textField.getText();
             output.println(text);

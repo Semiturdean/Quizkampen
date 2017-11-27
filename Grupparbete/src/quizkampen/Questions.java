@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Questions {
 
-    private List<String> questions;
+    private List<String> questions = new ArrayList<>();
     private List<String> answers = new ArrayList<>();
 
     public void setQuestions(List<String> questions) {
@@ -22,7 +22,7 @@ public class Questions {
     public void setAnswers() {
         Scanner s = null;
         try {
-            s = new Scanner(new File("C:\\Users\\Stanley\\Documents\\Java17\\OOP\\JAVA\\QuizServer\\Svar.txt"));
+            s = new Scanner(new File("Svar.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

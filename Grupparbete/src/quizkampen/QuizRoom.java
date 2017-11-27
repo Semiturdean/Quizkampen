@@ -24,11 +24,11 @@ public class QuizRoom {
         String text = "";
         int i = 0;
         for (String s : availableCategories) {
-            if(i != 2) {
+            if(i != availableCategories.size() - 1) {
                 text += s + ",";
                 i++;
             }
-            else if( i == 2)
+            else if( i == availableCategories.size() - 1)
             text += s;
         }
         return text;
@@ -67,7 +67,6 @@ public class QuizRoom {
         playerXScorePerRound = new int[totalRounds];
         playerOScorePerRound = new int[totalRounds];
         chosenCategory = new ChooseCategory();
-        mockDatabase();
     }
 
     private void removeCategory(String category) {
@@ -75,25 +74,18 @@ public class QuizRoom {
         availableCategories.remove(category);
     }
 
-    // Only for testing
-    private void mockDatabase() {
-        questions.add("Fråga 1");
-        questions.add("Fråga 2");
-        questions.add("Fråga 3");
-        answers.add("ett");
-        answers.add("två");
-        answers.add("tre");
-    }
-
     public void chooseCategory(String category, QuizRoomPlayer player) {
         // TODO should call a method to fetch a category's questions and answers
         chosenCategory.setCurrentCategory(category);
         chosenCategory.setCategoryQuestions();
-        questions = chosenCategory.getQuestions();
+        questions.addAll(chosenCategory.getQuestions());
+        answers = chosenCategory.getAnswers();
         removeCategory(category);
         // Opponent will choose the category next time
         currentRoundPlayer = player.getOpponent();
         currentRound++;
+
+        System.out.println(questions);
     }
 
     private void readPropertyFile() {
