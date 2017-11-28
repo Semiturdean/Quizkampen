@@ -1,0 +1,20 @@
+Vilken kontinent har det varmaste klimatet,Afrika,Sydamerika,Asien,Europa
+Vad heter Alpernas högsta topp,Mont Blanc,Kilmanjaro,Kebnekeise,Mount Everest
+Vilken årstid är det monsunregn i Indien,Sommar,Vår,Vinter,Höst
+Vilken land är världens minsta,Vatikanstaten,Andorra,Lichtenstein,Cypern
+Vilken är Afrikas största land,Sudan,Algeriet,Sydafrika,Nigeria
+Vilket land kallade sin flotta för Armadan,Spanien,Portugal,Frankrike,Holland
+Vilken är Portugals huvudstad,Lissabon,Portu,Faro,Sintra
+Vilken är Greklands största Ö,Kreta,Kos,Rhodos,Naxos
+Vid vilken av Amerikas kustländer ligger Bermudatriangeln,Florida,Hawaii,Puerto Rico,Bahamas
+Vilken är Europas största sjö,Ladoga,Balatonsjön,Vättern,Onega
+Hur stor del av världens vatten är saltvatten,97%,92%,85%,79%
+Vilken är världens största vulkan,Mauna Loa,Pompeji,Etna,Bromo
+Vilken är jordens näst minsta världsdel,Europa,Oceanien,Nordamerika,Sydamerika
+Hur stor del av jordens yta består av land,29%,15%,33%,29%
+Vilket är världens största öken,Antarktiska öknarna, Sahara öknen, Kalahari, Tanami öknen
+Vilken världsdel är störst till ytan,Asien,Afrika,Sydamerika,Nordamerika
+Vad mäter man med "Richterskalan",Ange styrkan hos jordbävningar,Ange styrkan på en orkan,Anger styrkan på en tsunami,Anger mängde lava vid ett ubrott
+Var ligger Mojaveöknen,USA,Bolivia,Libyen,Sudan
+Hur många insjöar finns i Sverige,96 000,104 000,44 000,88 000
+Vad heter Brasiliens huvudstad,Brasilia,Rio de Janeiro,Sao Paulo,Buenos Aires
