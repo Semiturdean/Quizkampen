@@ -66,9 +66,7 @@ public class QuizRoomPlayer extends Thread {
                 fromClient = input.readLine();
                 if (fromClient.startsWith(Commands.CATEGORY.toString())) {
                     fromClient = fromClient.substring(9);
-                    //System.out.println(room.getAvailableCategories());  //TODO
                     room.chooseCategory(fromClient, this);
-                    //System.out.println(room.getAvailableCategories()); //TODO
                     startNewRound();
                     // Notify the second client/server a category has been chosen
                     opponent.output.println(Commands.STARTROUND);
@@ -125,6 +123,22 @@ public class QuizRoomPlayer extends Thread {
         return s;
     }
 
+    private boolean isBothPlayersFinished() {
+        return room.isPlayerOFinish() && room.isPlayerXFinish();
+    }
+
+    private void checkPlayersFinish() {
+        room.setPlayerFinish(playerMark);
+        if (isBothPlayersFinished()) {
+            output.println(Commands.SCORE + room.getScoreResult(playerMark));
+            // Notify other server/client to get final score
+            opponent.output.println(Commands.SENDSCORE);
+            //output.println(Commands.ENDGAME.toString());
+        } else {
+            output.println(Commands.WAITSCORE);
+        }
+    }
+
     @Override
     public void run() {
         String fromClient;
@@ -145,21 +159,9 @@ public class QuizRoomPlayer extends Thread {
                         output.println(Commands.RESULT + "FALSE");
                     }
 
-                    System.out.println("Player X: " + room.getPlayerXScorePerRound());
-                    System.out.println("Player O: " + room.getPlayerOScorePerRound());
-
                     // Check if there are more questions
                     if (room.nextQuestion(currentQuestion)) {
-
-
-
-
                         output.println(Commands.QUESTION + convertListToString());
-
-
-
-
-                        //output.println(Commands.QUESTION + questions.get(currentQuestion));
                         currentQuestion++;
                     } else {
                         // If there are no more questions, check if there are more rounds
@@ -170,7 +172,8 @@ public class QuizRoomPlayer extends Thread {
 
                         } else {
                             // End game if there are no more rounds
-                            output.println(Commands.ENDGAME.toString());
+                            room.setPlayerFinish(playerMark);
+                            checkPlayersFinish();
                         }
                     }
                 } // Important! This command is only sent from the second player server and not the client
@@ -183,6 +186,8 @@ public class QuizRoomPlayer extends Thread {
                 } else if (fromClient.startsWith(Commands.MESSAGE.toString())) {
                     fromClient = fromClient.substring(8);
                     System.out.println(fromClient);
+                } else if (fromClient.startsWith(Commands.SENDSCORE.toString())) {
+                    output.println(Commands.SCORE + room.getScoreResult(playerMark));
                 }
             } catch (IOException e) {
                 System.out.println("Player disconnected");
