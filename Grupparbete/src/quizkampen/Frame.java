@@ -32,8 +32,8 @@ public class Frame extends JFrame implements PanelListener {
 	
 	
 	public Frame() {
-		// layouts, till�gg av labels och knappar p� panelen, storlek, visibility etc
-		setLayout(new BorderLayout());
+        // layouts, till�gg av labels och knappar p� panelen, storlek, visibility etc
+        setLayout(new BorderLayout());
 		setBackground(Color.BLUE);
 
 		add(startPanel, BorderLayout.CENTER);
@@ -63,8 +63,7 @@ public class Frame extends JFrame implements PanelListener {
 		setVisible(true);
 		setDefaultCloseOperation(3);
 	}
-	
-	@Override
+
 	public void nextQuestion() 
 	{
 		questionCounter++;
@@ -73,7 +72,6 @@ public class Frame extends JFrame implements PanelListener {
 	
 
 
-	@Override
 	public void categoryToQuestionPanel(String categoryName) 
 	{	
 		//setCategory(categoryName);
@@ -136,16 +134,7 @@ public class Frame extends JFrame implements PanelListener {
 		 
 	 }
 
-	public void startToCategoryPanel(String username){
-		
-		//user.setUsername(username);
-		remove(startPanel);
-		repaint();
-		add(userInfo, BorderLayout.NORTH);
-		add(categoryPanel, BorderLayout.CENTER);
-		getScoreBoard();
-			
-	}
+
 	public void endOfRoundToCategoryPanel()
 	{
 		remove(endOfRoundPanel);
@@ -171,4 +160,9 @@ public class Frame extends JFrame implements PanelListener {
 	public static void main(String[] arg) {
 		new Frame();
 	}
+
+    @Override
+    public void sendToServer(String message) {
+
+    }
 }

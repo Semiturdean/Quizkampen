@@ -134,7 +134,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 					if(clicked.getText().equalsIgnoreCase("r�tt svar"))
 					{
 						c.setBackground(Color.GREEN); 
-						panelListener.setScore();
+						//panelListener.setScore();
 						
 					}
 					else 
@@ -156,7 +156,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 			}
 			if(clicked == nextBtn)
 			{
-				panelListener.nextQuestion();
+				//panelListener.nextQuestion();
 				for(Component c : choicePanel.getComponents())
 				{
 					c.setBackground(nextBtn.getBackground());
@@ -165,7 +165,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 				questionCounter++;
 				if(questionCounter == 3)
 				{
-					panelListener.questionToEndOfRoundPanel();
+					//panelListener.questionToEndOfRoundPanel();
 				}
 			}
 			

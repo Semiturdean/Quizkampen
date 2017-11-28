@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class CategoryPanel extends JPanel implements ActionListener
+public class CategoryPanel extends JPanel implements ActionListener, PanelListener
 {
     private JPanel mainPanel;
     private JPanel labelPanel;
@@ -68,6 +68,7 @@ public class CategoryPanel extends JPanel implements ActionListener
     }
 
 
+
     //actionListener f�rvandlar knappen som har valts till gul och visar nextBtn
     @Override
     public void actionPerformed(ActionEvent e)
@@ -97,11 +98,13 @@ public class CategoryPanel extends JPanel implements ActionListener
             {
                 c.setBackground(nextBtn.getBackground());
                 ((AbstractButton) c).addActionListener(this);
+
             }
             nextBtn.setVisible(false);
+            sendCategory(categoryName);
 
             //raden nedan kommunicerar kategorin som har valts till framen
-            panelListener.categoryToQuestionPanel(categoryName);
+
         }
 
     }
@@ -116,11 +119,23 @@ public class CategoryPanel extends JPanel implements ActionListener
     public void placeButtons()
     {
         //Knapparna l�ggs genom den h�r forloopen
-        for(int i=0; i<numberOfCategories; i++)
-        {
-            JButton b = new JButton("Kategori"+i);
+        for(int i=0; i<numberOfCategories; i++) {
+            if (i == 0){
+                JButton b = new JButton("Musik");
             buttonPanel.add(b);
             b.addActionListener(this);
+        }
+            if(i==1){
+                JButton b = new JButton("Histora");
+                buttonPanel.add(b);
+                b.addActionListener(this);
+            }
+            if (i==2){
+                JButton b = new JButton("Geografi");
+                buttonPanel.add(b);
+                b.addActionListener(this);
+            }
+
         }
     }
 
@@ -133,4 +148,8 @@ public class CategoryPanel extends JPanel implements ActionListener
         }
     }
 
+    @Override
+    public void sendToServer(String message) {
+
+    }
 }
