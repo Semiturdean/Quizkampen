@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 public class EndOfRoundPanel extends JPanel implements ActionListener
 {
 	private JLabel resultLabel = new JLabel("");
-	private JButton nextRoundBtn = new JButton("Nästa Rond");
+	private JButton nextRoundBtn = new JButton("Nï¿½sta Rond");
 	
 	private PanelListener panelListener;
 	

@@ -21,6 +21,7 @@ public class Client extends JFrame implements ActionListener {
     private JButton categoryButton = new JButton("Skicka kategori");
     private JButton sendAnswer = new JButton("Send answer");
     private String text = "";
+    private Frame frame;
 
     Client(String serverAddress, int port) {
         try {
@@ -41,6 +42,8 @@ public class Client extends JFrame implements ActionListener {
             setLocationRelativeTo(null);
             setDefaultCloseOperation(3);
             setVisible(true);
+
+            //frame = new Frame();
 
             startGame();
         } catch (IOException e) {
@@ -76,7 +79,6 @@ public class Client extends JFrame implements ActionListener {
                 fromServer = fromServer.substring(9);
                 List<String> list = splitToList(fromServer); // TODO
                 System.out.println("Question: " + fromServer);
-
             } else if (fromServer.startsWith(Commands.RESULT.toString())) {
                 fromServer = fromServer.substring(7);
                 if (fromServer.equalsIgnoreCase("TRUE")) {
@@ -88,6 +90,7 @@ public class Client extends JFrame implements ActionListener {
                 List<String> list = splitToList(fromServer); // TODO
                 System.out.println("Please choose a category");
                 System.out.println(fromServer);
+                //frame.setCategory(list);
             } // This command from the server will be received when the next next round has been loaded
               else if (fromServer.startsWith(Commands.STARTROUND.toString())) {
                 // Notify server to start the round

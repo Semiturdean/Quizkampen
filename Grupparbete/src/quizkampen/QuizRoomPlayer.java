@@ -69,9 +69,7 @@ public class QuizRoomPlayer extends Thread {
                     //System.out.println(room.getAvailableCategories());  //TODO
                     room.chooseCategory(fromClient, this);
                     //System.out.println(room.getAvailableCategories()); //TODO
-                    System.out.println(currentQuestion);
                     startNewRound();
-                    System.out.println(currentQuestion);
                     // Notify the second client/server a category has been chosen
                     opponent.output.println(Commands.STARTROUND);
                 }
@@ -146,6 +144,9 @@ public class QuizRoomPlayer extends Thread {
                     } else {
                         output.println(Commands.RESULT + "FALSE");
                     }
+
+                    System.out.println("Player X: " + room.getPlayerXScorePerRound());
+                    System.out.println("Player O: " + room.getPlayerOScorePerRound());
 
                     // Check if there are more questions
                     if (room.nextQuestion(currentQuestion)) {
