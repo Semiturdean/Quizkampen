@@ -13,7 +13,8 @@ public enum Commands {
     WELCOME("WELCOME "),
     SCORE("SCORE "),
     WAITSCORE("WAITSCORE "),
-    SENDSCORE("SENDSCORE ");
+    SENDSCORE("SENDSCORE "),
+    CONTINUE("CONTINUE ");
 
     private final String name;
 
