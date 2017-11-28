@@ -1,73 +1,142 @@
 package quizkampen;
 
-import java.io.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 
-public class Client extends Thread {
-    private int port;
-    private String serverAddress;
+public class Client extends JFrame implements ActionListener {
+    private Socket clientConnection;
+    private boolean continueGame;
+    private BufferedReader input;
+    private PrintWriter output;
+    private JTextField textField = new JTextField(10);
+    private JButton categoryButton = new JButton("Skicka kategori");
+    private JButton sendAnswer = new JButton("Send answer");
+    private String text = "";
+    private Frame frame;
 
     Client(String serverAddress, int port) {
-        this.serverAddress = serverAddress;
-        this.port = port;
+        try {
+            clientConnection = new Socket(serverAddress, port);
+            input = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
+            output = new PrintWriter(clientConnection.getOutputStream(), true);
+            continueGame = true;
+
+//            setLayout(new FlowLayout());
+//            add(textField);
+//            add(categoryButton);
+//            add(sendAnswer);
+//            categoryButton.addActionListener(this);
+//            sendAnswer.addActionListener(this);
+//            textField.addActionListener(this);
+//
+//            setSize(300,300);
+//            setLocationRelativeTo(null);
+//            setDefaultCloseOperation(3);
+//            setVisible(true);
+
+            frame = new Frame();
+
+            startGame();
+        } catch (IOException e) {
+            System.out.println("Could not connect to server");
+        }
+    }
+
+    private void sendCategory(String category) {
+        output.println(Commands.CATEGORY + category);
+    }
+
+    private void sendAnswer(String answer) {
+        output.println(Commands.ANSWER + answer);
+    }
+
+    private List<String> splitToList(String fromServer) {
+        return Arrays.asList(fromServer.split(","));
+    }
+
+    public void startGame() throws IOException {
+        String fromServer;
+
+        fromServer = input.readLine();
+        if (fromServer.startsWith(Commands.WELCOME.toString())) {
+            System.out.println("Welcome");
+        }
+
+        while (continueGame) {
+            fromServer = input.readLine();
+            if (fromServer.startsWith(Commands.WAIT.toString())) {
+                System.out.println("Waiting on other player");
+            } else if (fromServer.startsWith(Commands.QUESTION.toString())) {
+                fromServer = fromServer.substring(9);
+                List<String> list = splitToList(fromServer); // TODO
+                System.out.println("Question: " + fromServer);
+            } else if (fromServer.startsWith(Commands.RESULT.toString())) {
+                fromServer = fromServer.substring(7);
+                if (fromServer.equalsIgnoreCase("TRUE")) {
+                    System.out.println("Correct answer");
+                } else if (fromServer.equalsIgnoreCase("FALSE")) {
+                    System.out.println("Incorrect answer");
+                }
+            } else if (fromServer.startsWith(Commands.CHOOSECATEGORY.toString())) {
+                List<String> list = splitToList(fromServer); // TODO
+                System.out.println("Please choose a category");
+                System.out.println(fromServer);
+                //frame.setCategory(list);
+            } // This command from the server will be received when the next next round has been loaded
+              else if (fromServer.startsWith(Commands.STARTROUND.toString())) {
+                // Notify server to start the round
+                output.println(Commands.STARTROUND);
+            } else if (fromServer.startsWith(Commands.MESSAGE.toString())) {
+                System.out.println(fromServer.substring(8));
+            } else if (fromServer.startsWith(Commands.WAITSCORE.toString())) {
+                System.out.println("Waiting on other player to finish their game");
+            } else if (fromServer.startsWith(Commands.SCORE.toString())) {
+                // Get both players' scores
+                // First number is the player score, second number the opponent
+                fromServer = fromServer.substring(6);
+                List<String> scores = splitToList(fromServer);
+                System.out.println(scores);
+            } // This command from the server will be received when both players are finished with their game
+              else if (fromServer.startsWith(Commands.SENDSCORE.toString())) {
+                output.println(Commands.SENDSCORE);
+            } else if (fromServer.startsWith(Commands.ENDGAME.toString())) {
+                continueGame = false;
+                System.out.println("Game has ended");
+            }
+        }
     }
 
     @Override
-    public void run() {
-        // Create the necessary input- and output-stream for communication with server
-        try (
-                Socket clientSocket = new Socket(serverAddress, port);
-                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream())
-        ) {
-            System.out.println("Established connection to the server");
-            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == categoryButton)
+        {
+            // textField.getAction();
+            text += textField.getText();
+            //System.out.println(text);
+            sendCategory(text);
+            text = "";
+        }
+        if(e.getSource() == textField){
 
-            Session clientChoice;
-            // Waits for commands from server
-            while ((clientChoice = (Session)inputStream.readObject()) != null) {
-                if (clientChoice.getState() == ProtocolState.SERVERSENTQUESTION) {
-                    System.out.println("Server: " + clientChoice.getQuestion());
-                    // Client answers question here
-                    clientChoice.setAnswer(userInput.readLine().trim());
-                    clientChoice.setState(ProtocolState.CLIENTSENTANSWER);
-                } else if (clientChoice.getState() == ProtocolState.SERVERSENTANSWER) {
-                    // Answer result goes here
-                    // Update GUI button colors depending on answer
-                    if (clientChoice.getVerdict()) {
-                        System.out.println("Du svarade rätt!");
-                    } else {
-                        System.out.println("Du svarade fel!");
-                    }
-
-                    clientChoice.setState(ProtocolState.WAITING);
-                } else if (clientChoice.getState() == ProtocolState.SERVERENDROUND) {
-                    // Notifying server the client has ended its round and waiting
-                    clientChoice.setState(ProtocolState.CLIENTWAITING);
-                    outputStream.writeObject(clientChoice);
-
-                    System.out.println("Waiting for next round");
-                    // Server should change the state in Session object to WAITING.
-                    // Client will continue running afterwards
-                    clientChoice = (Session) inputStream.readObject();
-                } else if (clientChoice.getState() == ProtocolState.ENDGAME) {
-                    System.out.println("Ending game");
-                    // Notify the server to stop listening for commands
-                    outputStream.writeObject(null);
-                    break;
-                }
-                outputStream.writeObject(clientChoice);
-            }
-            System.out.println("Game has ended");
-        } catch (IOException e) {
-            System.out.println("Server closed connection");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        }
+        if (e.getSource() == sendAnswer) {
+            text = Commands.ANSWER.toString();
+            text += textField.getText();
+            output.println(text);
+            text = "";
         }
     }
 
     public static void main(String[] args) {
-        Client c = new Client("127.0.0.1", 4444);
-        c.start();
+        Client client = new Client("127.0.0.1", 4444);
     }
 }

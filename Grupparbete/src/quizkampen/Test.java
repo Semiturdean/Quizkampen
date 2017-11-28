@@ -14,7 +14,7 @@ public class Test extends JFrame
 		setLayout(new BorderLayout());
 		
 		erp.setLabel("0-0");
-		erp.setButtonText("nästa rond");
+		erp.setButtonText("nï¿½sta rond");
 		erp.enableButton();
 		add(erp);
 		

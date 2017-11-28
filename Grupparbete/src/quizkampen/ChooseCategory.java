@@ -1,19 +1,34 @@
 package quizkampen;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class ChooseCategory extends SearchCategory {
 
-    private File Music = new File("C:\\Users\\Senad Hasic\\IdeaProjects\\Quizkampen\\Grupparbete\\src\\Musik.txt");
-    private File Geografi = new File("src\\Geografi.txt");
+    private File Music = new File("Musik.txt");
+    private File Geografi = new File("Geografi.txt");
+    private File Historia = new File("Historia.txt");
 
-    ChooseCategory(String category) throws IOException {
-        if (category.equalsIgnoreCase("Musik")) {
-            readFile(Music);
-        }
-        if (category.equalsIgnoreCase("Geografi")) {
-            readFile(Geografi);
-        }
+    private String currentCategory;
 
+    public void setCurrentCategory(String category) {
+        currentCategory = category;
+    }
+
+    public void setCategoryQuestions() {
+        try {
+            if (currentCategory.equalsIgnoreCase("Musik")) {
+                readFile(Music);
+            } else if (currentCategory.equalsIgnoreCase("Geografi")) {
+                readFile(Geografi);
+            } else if (currentCategory.equalsIgnoreCase("Historia")) {
+                readFile(Historia);
+            }
+        } catch (IOException e) {
+        }
+    }
+
+    public String getCurrentCategory() {
+        return currentCategory;
     }
 }

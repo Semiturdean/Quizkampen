@@ -16,16 +16,12 @@ public class Frame extends JFrame implements PanelListener {
 	
 	// paneler,labels,knappar
 	private JPanel userInfo = new JPanel();
-	private GameRoomPlayer user = new GameRoomPlayer();
+	//private QuizRoomPlayer user = new QuizRoomPlayer();
 	private int userScore = 0;
 	private int opponentScore = 0;
 	private JLabel resultLabel = new JLabel();
 	private QuestionPanel questionPanel = new QuestionPanel();
 	private CategoryPanel categoryPanel = new CategoryPanel();
-	private Database db = new Database();
-	private List<Category> categoryList = db.getCategoryList();
-	private Category category = null;
-	private List<Question> questionList; 
 	private MessagePanel messagePanel = new MessagePanel();
 	private EndOfRoundPanel endOfRoundPanel = new EndOfRoundPanel();
 	
@@ -36,7 +32,7 @@ public class Frame extends JFrame implements PanelListener {
 	
 	
 	public Frame() {
-		// layouts, tillägg av labels och knappar på panelen, storlek, visibility etc
+		// layouts, tillï¿½gg av labels och knappar pï¿½ panelen, storlek, visibility etc
 		setLayout(new BorderLayout());
 		setBackground(Color.BLUE);
 
@@ -47,7 +43,7 @@ public class Frame extends JFrame implements PanelListener {
 		
 		endOfRoundPanel.setPanelListener(this);
 			
-		categoryPanel.setButtonNames(categoryList);
+		//categoryPanel.setButtonNames(categoryList);
 		categoryPanel.setPanelListener(this);
 	
 		userInfo.setLayout(new FlowLayout());
@@ -63,7 +59,7 @@ public class Frame extends JFrame implements PanelListener {
 		add(messagePanel, BorderLayout.SOUTH);
 		
 		setSize(800,800);
-		setLocation(800,200);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(3);
 	}
@@ -72,7 +68,7 @@ public class Frame extends JFrame implements PanelListener {
 	public void nextQuestion() 
 	{
 		questionCounter++;
-		questionPanel.setQuestion(questionList.get(questionCounter));
+		//questionPanel.setQuestion(questionList.get(questionCounter));
 	}
 	
 
@@ -80,30 +76,29 @@ public class Frame extends JFrame implements PanelListener {
 	@Override
 	public void categoryToQuestionPanel(String categoryName) 
 	{	
-		setCategory(categoryName);
-		questionList = category.getQuestionList();
+		//setCategory(categoryName);
+		//questionList = category.getQuestionList();
 		remove(categoryPanel);
 		questionCounter = 0;
 		questionPanel.setQuestionCounter(0);
-		questionPanel.setQuestion(questionList.get(questionCounter));		
+		//questionPanel.setQuestion(questionList.get(questionCounter));
 		repaint();
 		add(questionPanel, BorderLayout.CENTER);
 	
 		
 	}
-	public void setCategory(String categoryName)
-	{
-		for(int i=0; i<categoryList.size(); i++)
-		{
-			if (categoryName.equalsIgnoreCase(categoryList.get(i).getName()))
-			{
-				category = categoryList.get(i);
-				break;
-				
-			}
-		}
-	}
 
+//	public void setCategory(List<String> categoryName)
+//	{
+//        for (int i = 0; i < categoryName.size(); i++) {
+//
+//            if (categoryName.get(i)) {
+//                category = categoryList.get(i);
+//                break;
+//
+//            }
+//        }
+//    }
 
 //	@Override
 //	public void questionToCategoryPanel() 
@@ -119,13 +114,13 @@ public class Frame extends JFrame implements PanelListener {
 		
 		userInfo.remove(resultLabel);
 		userInfo.add(resultLabel);
-		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motståndare");
+		//resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motstï¿½ndare");
 		
 	}
-	// skapar scoreboarden under spelets gång
+	// skapar scoreboarden under spelets gï¿½ng
 	 public void getScoreBoard(){
 		
-		resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motståndare"); 	
+		//resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motstï¿½ndare");
 		resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
 		userInfo.add(resultLabel);
 		resultLabel.setVisible(true);
@@ -143,7 +138,7 @@ public class Frame extends JFrame implements PanelListener {
 
 	public void startToCategoryPanel(String username){
 		
-		user.setUsername(username);
+		//user.setUsername(username);
 		remove(startPanel);
 		repaint();
 		add(userInfo, BorderLayout.NORTH);
