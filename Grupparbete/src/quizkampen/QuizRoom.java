@@ -19,6 +19,16 @@ public class QuizRoom {
     private List<String> availableCategories = new ArrayList<>();
     private QuizRoomPlayer currentRoundPlayer;
     private ChooseCategory chosenCategory;
+    private boolean playerXFinish = false;
+    private boolean playerOFinish = false;
+
+    public boolean isPlayerXFinish() {
+        return playerXFinish;
+    }
+
+    public boolean isPlayerOFinish() {
+        return playerOFinish;
+    }
 
     public String getAvailableCategories() {
         String text = "";
@@ -40,6 +50,24 @@ public class QuizRoom {
 
     public int getPlayerOScorePerRound() {
         return playerOScorePerRound[currentRound - 1];
+    }
+
+    public String getScoreResult(char playerMark) {
+        int playerXTotal = 0;
+        int playerOTotal = 0;
+        String result = "";
+        for (int i : playerXScorePerRound) {
+            playerXTotal += i;
+        }
+        for (int i : playerOScorePerRound) {
+            playerOTotal += i;
+        }
+        if (playerMark == 'X') {
+            result = Integer.toString(playerXTotal) + "," + Integer.toString(playerOTotal);
+        } else if (playerMark == 'O') {
+            result = Integer.toString(playerOTotal) + "," + Integer.toString(playerXTotal);
+        }
+        return result;
     }
 
     public List<String> getQuestions() {
@@ -80,14 +108,11 @@ public class QuizRoom {
         chosenCategory.setCategoryQuestions();
         questions.clear();
         questions.addAll(chosenCategory.getQuestions());
-        answers.clear();
         answers = chosenCategory.getAnswers();
         removeCategory(category);
         // Opponent will choose the category next time
         currentRoundPlayer = player.getOpponent();
         currentRound++;
-
-        //System.out.println(questions);
     }
 
     private void readPropertyFile() {
@@ -136,6 +161,14 @@ public class QuizRoom {
             playerXScorePerRound[currentRound - 1]++;
         } else if (playerMark == 'O') {
             playerOScorePerRound[currentRound - 1]++;
+        }
+    }
+
+    public void setPlayerFinish(char playerMark) {
+        if (playerMark == 'X') {
+            playerXFinish = true;
+        } else if (playerMark == 'O') {
+            playerOFinish = true;
         }
     }
 }

@@ -97,6 +97,17 @@ public class Client extends JFrame implements ActionListener {
                 output.println(Commands.STARTROUND);
             } else if (fromServer.startsWith(Commands.MESSAGE.toString())) {
                 System.out.println(fromServer.substring(8));
+            } else if (fromServer.startsWith(Commands.WAITSCORE.toString())) {
+                System.out.println("Waiting on other player to finish their game");
+            } else if (fromServer.startsWith(Commands.SCORE.toString())) {
+                // Get both players' scores
+                // First number is the player score, second number the opponent
+                fromServer = fromServer.substring(6);
+                List<String> scores = splitToList(fromServer);
+                System.out.println(scores);
+            } // This command from the server will be received when both players are finished with their game
+              else if (fromServer.startsWith(Commands.SENDSCORE.toString())) {
+                output.println(Commands.SENDSCORE);
             } else if (fromServer.startsWith(Commands.ENDGAME.toString())) {
                 continueGame = false;
                 System.out.println("Game has ended");
