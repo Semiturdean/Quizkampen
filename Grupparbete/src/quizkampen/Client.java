@@ -193,9 +193,7 @@ public class Client extends JFrame implements ActionListener{
             if (textField.getText().equalsIgnoreCase("musik") ||
                     textField.getText().equalsIgnoreCase("historia") ||
                     textField.getText().equalsIgnoreCase("geografi")) {
-                // textField.getAction();
                 text += textField.getText();
-                //System.out.println(text);
                 sendCategory(text);
                 text = "";
 
