@@ -30,20 +30,20 @@ public class Client extends JFrame implements ActionListener {
             output = new PrintWriter(clientConnection.getOutputStream(), true);
             continueGame = true;
 
-//            setLayout(new FlowLayout());
-//            add(textField);
-//            add(categoryButton);
-//            add(sendAnswer);
-//            categoryButton.addActionListener(this);
-//            sendAnswer.addActionListener(this);
-//            textField.addActionListener(this);
-//
-//            setSize(300,300);
-//            setLocationRelativeTo(null);
-//            setDefaultCloseOperation(3);
-//            setVisible(true);
+            setLayout(new FlowLayout());
+            add(textField);
+            add(categoryButton);
+            add(sendAnswer);
+            categoryButton.addActionListener(this);
+            sendAnswer.addActionListener(this);
+            textField.addActionListener(this);
 
-            frame = new Frame();
+            setSize(300,300);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(3);
+            setVisible(true);
+
+            //frame = new Frame();
 
             startGame();
         } catch (IOException e) {
