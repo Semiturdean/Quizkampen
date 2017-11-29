@@ -1,6 +1,7 @@
 package quizkampen;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Client extends JFrame implements ActionListener {
+public class Client extends JFrame implements ActionListener, PanelListener {
+    // Server variables
     private Socket clientConnection;
     private boolean continueGame;
     private BufferedReader input;
@@ -24,13 +26,69 @@ public class Client extends JFrame implements ActionListener {
     private JButton sendAnswer = new JButton("Send answer");
     private String text = "";
     private Frame frame;
+    private String serverAddress;
+    private int port;
+
+    // GUI variables
+    // paneler,labels,knappar
+    private JPanel userInfo = new JPanel();
+    private int userScore = 0;
+    private int opponentScore = 0;
+    private JLabel resultLabel = new JLabel();
+    private QuestionPanel questionPanel = new QuestionPanel();
+    private CategoryPanel categoryPanel = new CategoryPanel();
+    private MessagePanel messagePanel = new MessagePanel();
+    private EndOfRoundPanel endOfRoundPanel = new EndOfRoundPanel();
+    private StartPanel startPanel = new StartPanel();
+    private int questionCounter = 0;
 
     Client(String serverAddress, int port) {
+        this.serverAddress = serverAddress;
+        this.port = port;
+
+        // layouts, till�gg av labels och knappar p� panelen, storlek, visibility etc
+        setLayout(new BorderLayout());
+        setBackground(Color.BLUE);
+
+        add(startPanel, BorderLayout.CENTER);
+        startPanel.setPanelListener(this);
+
+        questionPanel.setPanelListener(this);
+
+        endOfRoundPanel.setPanelListener(this);
+
+        //categoryPanel.setButtonNames(categoryList);
+        categoryPanel.setPanelListener(this);
+
+        userInfo.setLayout(new FlowLayout());
+        userInfo.add(resultLabel);
+        userInfo.setBackground(Color.PINK); userInfo.setBorder(new LineBorder(Color.BLACK, 2));
+        resultLabel.setVisible(false);
+
+        getScoreBoard();
+        userInfo.setBackground(Color.PINK);
+        userInfo.setBorder(new LineBorder(Color.BLACK, 2));
+
+
+        add(messagePanel, BorderLayout.SOUTH);
+
+        setSize(800,800);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    /*
+    Client
+     */
+
+    public void connectToServer() {
         try {
             clientConnection = new Socket(serverAddress, port);
             input = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
             output = new PrintWriter(clientConnection.getOutputStream(), true);
             continueGame = true;
+
 
             setLayout(new FlowLayout());
             add(textField);
@@ -48,6 +106,9 @@ public class Client extends JFrame implements ActionListener {
 
             //frame = new Frame();
 
+
+            startToCategoryPanel();
+
             startGame();
         } catch (IOException e) {
             System.out.println("Could not connect to server");
@@ -60,7 +121,7 @@ public class Client extends JFrame implements ActionListener {
         }
     }
 
-    private void sendCategory(String category) {
+    public void sendCategory(String category) {
         output.println(Commands.CATEGORY + category);
     }
 
@@ -109,8 +170,7 @@ public class Client extends JFrame implements ActionListener {
                 }
             } else if (fromServer.startsWith(Commands.CHOOSECATEGORY.toString())) {
                 List<String> list = splitToList(fromServer); // TODO
-                System.out.println("Please choose a category");
-                System.out.println(fromServer);
+
                 //frame.setCategory(list);
             } // This command from the server will be received when the next next round has been loaded
               else if (fromServer.startsWith(Commands.STARTROUND.toString())) {
@@ -189,6 +249,93 @@ public class Client extends JFrame implements ActionListener {
                 text = "";
         }
     }
+
+    /*
+
+     */
+
+    /*
+    GUI
+     */
+
+    // skapar scoreboarden under spelets g�ng
+    public void getScoreBoard(){
+
+        //resultLabel.setText(user.getUsername()+"     "+userScore+" - "+"DOLD"+"     "+"Motst�ndare");
+        resultLabel.setFont(new Font("Serif", Font.BOLD, 32));
+        userInfo.add(resultLabel);
+        resultLabel.setVisible(true);
+        categoryPanel.setVisible(true);
+    }
+
+    public void getNewScoreBoard() {
+
+        userInfo.remove(resultLabel);
+        userInfo.add(resultLabel);
+        //resultLabel.setText(user.getUsername()+"     "+userScore+" - "+opponentScore+"     "+"Motst�ndare");
+
+    }
+
+    public void nextQuestion() {
+        questionCounter++;
+        //questionPanel.setQuestion(questionList.get(questionCounter));
+    }
+
+    public void categoryToQuestionPanel(String categoryName) {
+        //setCategory(categoryName);
+        //questionList = category.getQuestionList();
+        remove(categoryPanel);
+        questionCounter = 0;
+        questionPanel.setQuestionCounter(0);
+        //questionPanel.setQuestion(questionList.get(questionCounter));
+        repaint();
+        add(questionPanel, BorderLayout.CENTER);
+    }
+
+    public void questionToEndOfRoundPanel() {
+        remove(questionPanel);
+        getNewScoreBoard();
+        endOfRoundPanel.setLabel(resultLabel.getText());
+        endOfRoundPanel.enableButton();
+        repaint();
+        add(endOfRoundPanel, BorderLayout.CENTER);
+    }
+
+    public void endOfRoundToCategoryPanel() {
+        remove(endOfRoundPanel);
+        repaint();
+        add(categoryPanel, BorderLayout.CENTER);
+    }
+
+    public void setScore() {
+        userInfo.remove(resultLabel);
+        userScore++;
+        repaint();
+        getScoreBoard();
+    }
+
+    public void startToCategoryPanel() {
+        //user.setUsername(username);
+        remove(startPanel);
+        repaint();
+        add(userInfo, BorderLayout.NORTH);
+        add(categoryPanel, BorderLayout.CENTER);
+        getScoreBoard();
+    }
+
+    @Override
+    public void sendToServer(String message)
+    {
+        if(message.startsWith("CONNECT"))
+        {
+            connectToServer();
+        }
+
+    }
+
+    /*
+
+     */
 
     public static void main(String[] args) {
         Client client = new Client("127.0.0.1", 4444);
