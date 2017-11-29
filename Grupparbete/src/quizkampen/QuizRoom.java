@@ -94,7 +94,7 @@ public class QuizRoom {
         readPropertyFile();
         playerXScorePerRound = new int[totalRounds];
         playerOScorePerRound = new int[totalRounds];
-        chosenCategory = new ChooseCategory();
+        chosenCategory = new ChooseCategory(questionsPerRound);
     }
 
     private void removeCategory(String category) {
