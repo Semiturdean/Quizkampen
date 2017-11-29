@@ -2,7 +2,6 @@ package quizkampen;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Client extends JFrame implements ActionListener, PanelListener {
+public class Client extends JFrame implements ActionListener{
     // Server variables
     private Socket clientConnection;
     private boolean continueGame;
@@ -92,8 +91,6 @@ public class Client extends JFrame implements ActionListener, PanelListener {
             System.out.println("Could not connect to server");
         }
     }
-
-    public void sendCategory(String category) {
     
     private void startToGamePanel(){
     	componentPanel.remove(newGame);
@@ -226,17 +223,6 @@ public class Client extends JFrame implements ActionListener, PanelListener {
                 text = "";
         }
     }
-
-    /*
-
-     */
-
-    /*
-    GUI
-     */
-    /*
-
-     */
 
     public static void main(String[] args) {
         Client client = new Client("127.0.0.1", 4444);
