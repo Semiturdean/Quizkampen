@@ -133,7 +133,7 @@ public class QuizRoomPlayer extends Thread {
             output.println(Commands.SCORE + room.getScoreResult(playerMark));
             // Notify other server/client to get final score
             opponent.output.println(Commands.SENDSCORE);
-            //output.println(Commands.ENDGAME.toString());
+            output.println(Commands.ENDGAME);
         } else {
             output.println(Commands.WAITSCORE);
         }
@@ -179,15 +179,16 @@ public class QuizRoomPlayer extends Thread {
                 } // Important! This command is only sent from the second player server and not the client
                   else if (fromClient.startsWith(Commands.STARTROUND.toString())) {
                     startNewRound();
-                } else if (fromClient.startsWith(Commands.CATEGORY.toString())) {
+                } /*else if (fromClient.startsWith(Commands.CATEGORY.toString())) {
                     fromClient = fromClient.substring(9);
 
                     // TODO
-                } else if (fromClient.startsWith(Commands.MESSAGE.toString())) {
+                }*/ else if (fromClient.startsWith(Commands.MESSAGE.toString())) {
                     fromClient = fromClient.substring(8);
                     System.out.println(fromClient);
                 } else if (fromClient.startsWith(Commands.SENDSCORE.toString())) {
                     output.println(Commands.SCORE + room.getScoreResult(playerMark));
+                    output.println(Commands.ENDGAME);
                 }
             } catch (IOException e) {
                 System.out.println("Player disconnected");

@@ -68,7 +68,9 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() == nextRoundBtn)
-		panelListener.endOfRoundToCategoryPanel();
+		if (e.getSource() == nextRoundBtn) {
+
+		}
+		//panelListener.endOfRoundToCategoryPanel();
 	}
 }

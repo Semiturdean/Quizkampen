@@ -2,6 +2,7 @@ package quizkampen;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,11 +13,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class Client extends JFrame implements ActionListener {
+public class Client extends JFrame implements ActionListener, PanelListener {
+    // Server variables
     private Socket clientConnection;
     private boolean continueGame;
     private BufferedReader input;
@@ -28,11 +32,12 @@ public class Client extends JFrame implements ActionListener {
     private JPanel picturePanel = new JPanel();
     private JLabel picLabel = new JLabel();
     private String text = "";
+    private Frame frame;
     private ImageIcon icon = new ImageIcon();
     private JButton newGame = new JButton("Starta ett nytt spel");
-	private final JLabel userLabel = new JLabel("Ange ett anv‰ndarnamn:");
-	private JLabel userName = new JLabel("");
-	private JTextField userNameInput = new JTextField(10);
+  	private final JLabel userLabel = new JLabel("Ange ett anv√§ndarnamn:");
+  	private JLabel userName = new JLabel("");
+	  private JTextField userNameInput = new JTextField(10);
 
     Client(String serverAddress, int port) {
         try {
@@ -81,12 +86,14 @@ public class Client extends JFrame implements ActionListener {
             //frame = new Frame();
 
             startGame();
-        }catch (MalformedURLException e) {
+      }catch (MalformedURLException e) {
 			e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Could not connect to server");
         }
     }
+
+    public void sendCategory(String category) {
     
     private void startToGamePanel(){
     	componentPanel.remove(newGame);
@@ -121,20 +128,31 @@ public class Client extends JFrame implements ActionListener {
             if (fromServer.startsWith(Commands.WAIT.toString())) {
                 System.out.println("Waiting on other player");
             } else if (fromServer.startsWith(Commands.QUESTION.toString())) {
-                fromServer = fromServer.substring(9);
+
+                fromServer = fromServer.substring(9).trim().replace("[", "").replace("]", "");
                 List<String> list = splitToList(fromServer); // TODO
-                System.out.println("Question: " + fromServer);
+                list = shuffleAnswers(list);
+                for (int i = 0; i < list.size(); i++) {
+                    if (i == 0) {
+                        System.out.println(list.get(i));
+                    } else if (i > 0 && i < list.size()) {
+                        if (i < 4) {
+                            System.out.print(list.get(i) + " --- ");
+                        } else {
+                            System.out.println(list.get(i));
+                        }
+                    }
+                }
             } else if (fromServer.startsWith(Commands.RESULT.toString())) {
                 fromServer = fromServer.substring(7);
                 if (fromServer.equalsIgnoreCase("TRUE")) {
-                    System.out.println("Correct answer");
+                    System.out.println("\nCorrect answer");
                 } else if (fromServer.equalsIgnoreCase("FALSE")) {
-                    System.out.println("Incorrect answer");
+                    System.out.println("\nIncorrect answer");
                 }
             } else if (fromServer.startsWith(Commands.CHOOSECATEGORY.toString())) {
                 List<String> list = splitToList(fromServer); // TODO
-                System.out.println("Please choose a category");
-                System.out.println(fromServer);
+
                 //frame.setCategory(list);
             } // This command from the server will be received when the next next round has been loaded
               else if (fromServer.startsWith(Commands.STARTROUND.toString())) {
@@ -156,26 +174,44 @@ public class Client extends JFrame implements ActionListener {
             } else if (fromServer.startsWith(Commands.ENDGAME.toString())) {
                 continueGame = false;
                 System.out.println("Game has ended");
+                System.exit(0);
             }
         }
     }
 
+    private List<String> shuffleAnswers(List<String> list){
+        List<String> andralist = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            andralist.add(list.get(i));
+        }
+        Collections.shuffle(andralist);
+        andralist.add(list.get(0));
+        Collections.swap(andralist, 0, 4);
+        return andralist;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == categoryButton)
-        {
-            // textField.getAction();
-            text += textField.getText();
-            //System.out.println(text);
-            sendCategory(text);
-            text = "";
+        if(e.getSource() == categoryButton) {
+            if (textField.getText().equalsIgnoreCase("musik") ||
+                    textField.getText().equalsIgnoreCase("historia") ||
+                    textField.getText().equalsIgnoreCase("geografi")) {
+                // textField.getAction();
+                text += textField.getText();
+                //System.out.println(text);
+                sendCategory(text);
+                text = "";
+
+            } else {
+                System.out.println("Ogiltig kategori");
+            }
         }
         if(e.getSource() == userNameInput) {
         	if(!userNameInput.getText().equals("")) {
         		userName.setText(userNameInput.getText());
         		componentPanel.remove(userNameInput);
         		newGame.setVisible(true);
-        		userLabel.setText("Anv‰ndare:");
+        		userLabel.setText("Anv√§ndare:");
         	}
         }
         
@@ -184,12 +220,23 @@ public class Client extends JFrame implements ActionListener {
         	
         }
         if (e.getSource() == sendAnswer) {
-            text = Commands.ANSWER.toString();
-            text += textField.getText();
-            output.println(text);
-            text = "";
+                text = Commands.ANSWER.toString();
+                text += textField.getText();
+                output.println(text);
+                text = "";
         }
     }
+
+    /*
+
+     */
+
+    /*
+    GUI
+     */
+    /*
+
+     */
 
     public static void main(String[] args) {
         Client client = new Client("127.0.0.1", 4444);
