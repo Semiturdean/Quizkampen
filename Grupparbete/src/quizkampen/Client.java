@@ -21,7 +21,6 @@ public class Client extends JFrame implements ActionListener {
     private JButton categoryButton = new JButton("Skicka kategori");
     private JButton sendAnswer = new JButton("Send answer");
     private String text = "";
-    private Frame frame;
 
     Client(String serverAddress, int port) {
         try {
@@ -30,7 +29,8 @@ public class Client extends JFrame implements ActionListener {
             output = new PrintWriter(clientConnection.getOutputStream(), true);
             continueGame = true;
 
-            setLayout(new FlowLayout());
+            setLayout(new BorderLayout());
+            setBackground(Color.WHITE);
             add(textField);
             add(categoryButton);
             add(sendAnswer);
