@@ -148,30 +148,13 @@ public class Client extends JFrame implements ActionListener {
         return andralist;
     }
 
-//    private List<String> shuffleAnswers(List<String> answers) {
-//        List<String> temp = new ArrayList<>();
-//        temp.add(answers.get(0));
-//        answers.remove(0);
-//        Collections.shuffle(answers);
-//        temp.addAll(answers);
-//
-//      /*  List<String> temp = answers.subList(1, 5);
-//        Collections.shuffle(temp);
-//        for (int i = 1; i < answers.size(); i++) {
-//            answers.add(i, temp.get(i - 1));
-//        }*/
-//        return temp;
-//    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == categoryButton) {
             if (textField.getText().equalsIgnoreCase("musik") ||
                     textField.getText().equalsIgnoreCase("historia") ||
                     textField.getText().equalsIgnoreCase("geografi")) {
-                // textField.getAction();
                 text += textField.getText();
-                //System.out.println(text);
                 sendCategory(text);
                 text = "";
 
