@@ -59,7 +59,7 @@ public class Frame extends JFrame implements PanelListener {
 		add(messagePanel, BorderLayout.SOUTH);
 		
 		setSize(800,800);
-		setLocation(800,200);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(3);
 	}

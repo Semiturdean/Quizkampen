@@ -9,9 +9,9 @@ public class SearchCategory extends Questions {
 
     private List<String> questions = new ArrayList<>();
 
-    public void readFile(File category) throws IOException {
+    public void readFile(File category, int questionsPerRound) throws IOException {
         Map<String, Integer> map = new HashMap<>();
-        int i = 3;
+        int i = questionsPerRound;
         while (map.size() < i) {
             String s = null;
             try {
@@ -22,7 +22,7 @@ public class SearchCategory extends Questions {
             if (!map.containsKey(s))
                 questions.add(map.size(), s);
             map.put(s, 0);
-            map.put(s, map.get(s) + 1);
+            map.put(s, map.get(s) + map.size());
         }
         setQuestions(questions);
     }
