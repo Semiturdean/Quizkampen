@@ -10,7 +10,11 @@ public enum Commands {
     ENDGAME("ENDGAME "),
     CATEGORY("CATEGORY "),
     ANSWER("ANSWER "),
-    WELCOME("WELCOME ");
+    WELCOME("WELCOME "),
+    SCORE("SCORE "),
+    WAITSCORE("WAITSCORE "),
+    SENDSCORE("SENDSCORE "),
+    CONTINUE("CONTINUE ");
 
     private final String name;
 

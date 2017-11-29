@@ -27,7 +27,7 @@ public class Questions {
             e.printStackTrace();
         }
         while (s.hasNext()){
-            answers.add(s.next());
+            answers.add(s.nextLine());
         }
         s.close();
     }
