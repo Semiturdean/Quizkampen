@@ -48,6 +48,12 @@ public class Client extends JFrame implements ActionListener {
             startGame();
         } catch (IOException e) {
             System.out.println("Could not connect to server");
+        } finally {
+            try {
+                clientConnection.close();
+            } catch (IOException e) {
+                System.out.println("Disconnecting from server");
+            }
         }
     }
 
@@ -111,6 +117,7 @@ public class Client extends JFrame implements ActionListener {
             } else if (fromServer.startsWith(Commands.ENDGAME.toString())) {
                 continueGame = false;
                 System.out.println("Game has ended");
+                System.exit(0);
             }
         }
     }

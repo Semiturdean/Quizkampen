@@ -133,7 +133,7 @@ public class QuizRoomPlayer extends Thread {
             output.println(Commands.SCORE + room.getScoreResult(playerMark));
             // Notify other server/client to get final score
             opponent.output.println(Commands.SENDSCORE);
-            //output.println(Commands.ENDGAME.toString());
+            output.println(Commands.ENDGAME);
         } else {
             output.println(Commands.WAITSCORE);
         }
@@ -188,6 +188,7 @@ public class QuizRoomPlayer extends Thread {
                     System.out.println(fromClient);
                 } else if (fromClient.startsWith(Commands.SENDSCORE.toString())) {
                     output.println(Commands.SCORE + room.getScoreResult(playerMark));
+                    output.println(Commands.ENDGAME);
                 }
             } catch (IOException e) {
                 System.out.println("Player disconnected");
