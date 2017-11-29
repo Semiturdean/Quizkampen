@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Client extends JFrame implements ActionListener {
@@ -37,6 +39,7 @@ public class Client extends JFrame implements ActionListener {
             categoryButton.addActionListener(this);
             sendAnswer.addActionListener(this);
             textField.addActionListener(this);
+
 
             setSize(300,300);
             setLocationRelativeTo(null);
@@ -82,15 +85,27 @@ public class Client extends JFrame implements ActionListener {
             if (fromServer.startsWith(Commands.WAIT.toString())) {
                 System.out.println("Waiting on other player");
             } else if (fromServer.startsWith(Commands.QUESTION.toString())) {
-                fromServer = fromServer.substring(9);
+
+                fromServer = fromServer.substring(9).trim().replace("[", "").replace("]", "");
                 List<String> list = splitToList(fromServer); // TODO
-                System.out.println("Question: " + fromServer);
+                list = shuffleAnswers(list);
+                for (int i = 0; i < list.size(); i++) {
+                    if (i == 0) {
+                        System.out.println(list.get(i));
+                    } else if (i > 0 && i < list.size()) {
+                        if (i < 4) {
+                            System.out.print(list.get(i) + " --- ");
+                        } else {
+                            System.out.println(list.get(i));
+                        }
+                    }
+                }
             } else if (fromServer.startsWith(Commands.RESULT.toString())) {
                 fromServer = fromServer.substring(7);
                 if (fromServer.equalsIgnoreCase("TRUE")) {
-                    System.out.println("Correct answer");
+                    System.out.println("\nCorrect answer");
                 } else if (fromServer.equalsIgnoreCase("FALSE")) {
-                    System.out.println("Incorrect answer");
+                    System.out.println("\nIncorrect answer");
                 }
             } else if (fromServer.startsWith(Commands.CHOOSECATEGORY.toString())) {
                 List<String> list = splitToList(fromServer); // TODO
@@ -122,24 +137,56 @@ public class Client extends JFrame implements ActionListener {
         }
     }
 
+    private List<String> shuffleAnswers(List<String> list){
+        List<String> andralist = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            andralist.add(list.get(i));
+        }
+        Collections.shuffle(andralist);
+        andralist.add(list.get(0));
+        Collections.swap(andralist, 0, 4);
+        return andralist;
+    }
+
+//    private List<String> shuffleAnswers(List<String> answers) {
+//        List<String> temp = new ArrayList<>();
+//        temp.add(answers.get(0));
+//        answers.remove(0);
+//        Collections.shuffle(answers);
+//        temp.addAll(answers);
+//
+//      /*  List<String> temp = answers.subList(1, 5);
+//        Collections.shuffle(temp);
+//        for (int i = 1; i < answers.size(); i++) {
+//            answers.add(i, temp.get(i - 1));
+//        }*/
+//        return temp;
+//    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == categoryButton)
-        {
-            // textField.getAction();
-            text += textField.getText();
-            //System.out.println(text);
-            sendCategory(text);
-            text = "";
+        if(e.getSource() == categoryButton) {
+            if (textField.getText().equalsIgnoreCase("musik") ||
+                    textField.getText().equalsIgnoreCase("historia") ||
+                    textField.getText().equalsIgnoreCase("geografi")) {
+                // textField.getAction();
+                text += textField.getText();
+                //System.out.println(text);
+                sendCategory(text);
+                text = "";
+
+            } else {
+                System.out.println("Ogiltig kategori");
+            }
         }
         if(e.getSource() == textField){
 
         }
         if (e.getSource() == sendAnswer) {
-            text = Commands.ANSWER.toString();
-            text += textField.getText();
-            output.println(text);
-            text = "";
+                text = Commands.ANSWER.toString();
+                text += textField.getText();
+                output.println(text);
+                text = "";
         }
     }
 
