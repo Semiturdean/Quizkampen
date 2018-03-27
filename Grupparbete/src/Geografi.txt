@@ -1,9 +1,0 @@
-﻿Hur hogt ar mt Eeverst i m,1337,2222,2333,2333
-Hur manga dm pa en meter,10,2,4,8
-Hur manda cm pa en meter,100,1,20,30
-Hur manga km pa en mil,10,1,20,30
-Hur manga mil pa en kvadrat,1,2,3,4
-Hur manga manniskor pa en,2,3,4,5
-Hur manga aliens i rymden,2,3,4,5
-Hur manga apor i djungeln,5,3,4,3
-Hur manga ufon i rymden,3,4,2,3

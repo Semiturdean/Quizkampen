@@ -27,7 +27,7 @@ public class StartPanel extends JPanel implements ActionListener
 {
 	JPanel userInfo = new JPanel();
 	private JButton newGame = new JButton("Starta ett nytt spel");
-	private final JLabel userLabel = new JLabel("Ange ett användarnamn:");
+	private final JLabel userLabel = new JLabel("Ange ett anvÃ¤ndarnamn:");
 	private JLabel userName = new JLabel(""); 
 	private JLabel picLabel = new JLabel();
 	ImageIcon icon = new ImageIcon();
@@ -84,6 +84,7 @@ public class StartPanel extends JPanel implements ActionListener
 		//picLabel.setIcon(new ImageIcon("C:\\Users\\sinasa2\\Desktop\\Q.JPG"));
 		picPanel.add(picLabel);
 		add(picPanel);
+
 			
 	}
 
@@ -96,12 +97,13 @@ public class StartPanel extends JPanel implements ActionListener
 				userInfo.remove(userNameInput);
 				newGame.setVisible(true);
 				newGame.addActionListener(this);
-				userLabel.setText("Användare:");
+				userLabel.setText("Anvï¿½ndare:");
 		}
 	}
 		if (e.getSource() == newGame) 
 		{
-			panelListener.startToCategoryPanel(username);
+			panelListener.sendToServer("CONNECT" +username);
+
 		}
 		
 	}

@@ -23,17 +23,17 @@ import javax.swing.border.LineBorder;
 public class QuestionPanel extends JPanel implements ActionListener
 {
 		/*
-		 * QuestionPanelen har en mainPanel och en knapp för att gå vidare
-		 * på mainPanel finns det två paneler, en till frågan och den andra till knapparna som
+		 * QuestionPanelen har en mainPanel och en knapp fï¿½r att gï¿½ vidare
+		 * pï¿½ mainPanel finns det tvï¿½ paneler, en till frï¿½gan och den andra till knapparna som
 		 * visar 4 val
 		 */
 	
 	
-		//Countern för att byta panel efter 3 frågor
+		//Countern fï¿½r att byta panel efter 3 frï¿½gor
 		int questionCounter = 0;
 		
 		
-		//Alla componenter initieras här
+		//Alla componenter initieras hï¿½r
 		private JLabel questionLabel;
 		private JButton choice1Btn;
 		private JButton choice2Btn;
@@ -42,12 +42,12 @@ public class QuestionPanel extends JPanel implements ActionListener
 		private JButton nextBtn;
 		
 		
-		//Två panel skapas här
+		//Tvï¿½ panel skapas hï¿½r
 		JPanel mainPanel = new JPanel();
 		JPanel questionPanel = new JPanel();
 		JPanel choicePanel = new JPanel();
 		
-		//inteface för att kommunicera med framen
+		//inteface fï¿½r att kommunicera med framen
 		private PanelListener panelListener;
 		
 		public QuestionPanel()
@@ -60,7 +60,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 			
 			
 			
-			/////Frågan////////////////////////////////////		
+			/////Frï¿½gan////////////////////////////////////		
 			
 			questionPanel.setLayout(new GridBagLayout());
 			questionLabel = new JLabel();
@@ -95,30 +95,30 @@ public class QuestionPanel extends JPanel implements ActionListener
 			add(mainPanel, BorderLayout.CENTER);
 			
 			
-			///////Knappen för att gå vidare
+			///////Knappen fï¿½r att gï¿½ vidare
 			
-			nextBtn = new JButton("Nästa");
+			nextBtn = new JButton("Nï¿½sta");
 			add(nextBtn, BorderLayout.SOUTH);
 			nextBtn.addActionListener(this);
 				
 		}
 		
-		//För att länka en fråga till labeln och knapparna
+		//Fï¿½r att lï¿½nka en frï¿½ga till labeln och knapparna
 		
-		public void setQuestion(Question question)
-		{
-			questionLabel.setText(question.getQuestion());
-			choice1Btn.setText(question.getRightChoice());
-			choice2Btn.setText(question.getWrongChoice1());
-			choice3Btn.setText(question.getWrongChoice2());
-			choice4Btn.setText(question.getWrongChoice3());
-		}
+//		public void setQuestion(Question question)
+//		{
+//			questionLabel.setText(question.getQuestion());
+//			choice1Btn.setText(question.getRightChoice());
+//			choice2Btn.setText(question.getWrongChoice1());
+//			choice3Btn.setText(question.getWrongChoice2());
+//			choice4Btn.setText(question.getWrongChoice3());
+//		}
 
 		/*
-		 * actionListenern ändrar färg på knappen till grön om det är rätt svar och till röd om det är fel svar
-		 * om fel svar har valts, det rätta svaret visas också genom att andrä färget på knappen till grön
-		 * när man kilckar på nästa sätts de originala färgen tillbaka på knapparna och så går man till nästa fråga
-		 * questionCounter håller koll på hur många frågor har ställts. när 3 frågor har ställts byter actionListenern panel
+		 * actionListenern ï¿½ndrar fï¿½rg pï¿½ knappen till grï¿½n om det ï¿½r rï¿½tt svar och till rï¿½d om det ï¿½r fel svar
+		 * om fel svar har valts, det rï¿½tta svaret visas ocksï¿½ genom att andrï¿½ fï¿½rget pï¿½ knappen till grï¿½n
+		 * nï¿½r man kilckar pï¿½ nï¿½sta sï¿½tts de originala fï¿½rgen tillbaka pï¿½ knapparna och sï¿½ gï¿½r man till nï¿½sta frï¿½ga
+		 * questionCounter hï¿½ller koll pï¿½ hur mï¿½nga frï¿½gor har stï¿½llts. nï¿½r 3 frï¿½gor har stï¿½llts byter actionListenern panel
 		 * genom att anropa en metod i interfacet.
 		 */
 		
@@ -131,10 +131,10 @@ public class QuestionPanel extends JPanel implements ActionListener
 				
 				if(clicked == c)
 				{
-					if(clicked.getText().equalsIgnoreCase("rätt svar"))
+					if(clicked.getText().equalsIgnoreCase("rï¿½tt svar"))
 					{
 						c.setBackground(Color.GREEN); 
-						panelListener.setScore();
+						//panelListener.setScore();
 						
 					}
 					else 
@@ -142,7 +142,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 						c.setBackground(Color.RED);
 					}
 				}
-				else if(((AbstractButton) c).getText().equalsIgnoreCase("rätt svar") && clicked != nextBtn)
+				else if(((AbstractButton) c).getText().equalsIgnoreCase("rï¿½tt svar") && clicked != nextBtn)
 				{
 					c.setBackground(Color.GREEN);
 					
@@ -156,7 +156,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 			}
 			if(clicked == nextBtn)
 			{
-				panelListener.nextQuestion();
+				//panelListener.nextQuestion();
 				for(Component c : choicePanel.getComponents())
 				{
 					c.setBackground(nextBtn.getBackground());
@@ -165,7 +165,7 @@ public class QuestionPanel extends JPanel implements ActionListener
 				questionCounter++;
 				if(questionCounter == 3)
 				{
-					panelListener.questionToEndOfRoundPanel();
+					//panelListener.questionToEndOfRoundPanel();
 				}
 			}
 			

@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 public class EndOfRoundPanel extends JPanel implements ActionListener
 {
 	private JLabel resultLabel = new JLabel("");
-	private JButton nextRoundBtn = new JButton("Nästa Rond");
+	private JButton nextRoundBtn = new JButton("Nï¿½sta Rond");
 	
 	private PanelListener panelListener;
 	
@@ -68,7 +68,9 @@ public class EndOfRoundPanel extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() == nextRoundBtn)
-		panelListener.endOfRoundToCategoryPanel();
+		if (e.getSource() == nextRoundBtn) {
+
+		}
+		//panelListener.endOfRoundToCategoryPanel();
 	}
 }
